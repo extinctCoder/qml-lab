@@ -3,9 +3,6 @@ import theme
 import components.ui.text
 import components.ui.mark
 
-// The content shared by ListItem and Tile (internal to the button family):
-// on the left a mark and a Header (icon, title, description), on the right the meta,
-// or a switch (checkable tiles).
 Item {
     id: root
 
