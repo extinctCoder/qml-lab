@@ -3,6 +3,7 @@ import theme
 import components.ui
 import components.ui.text as Text
 import components.ui.button as Button
+import components.ui.section as Section
 
 // The storybook: the button family (Basic, ListItem, Tile), the text family (Mono and Header),
 // and Surface, our look for any box. Everything with a box gets it from Surface.
@@ -19,6 +20,7 @@ Rectangle {
     property string output: "headphones"
     property bool night_light: true
     property bool stay_awake: false
+    property bool wifi: true
 
     // The scrollable area: a window-sized view onto the (taller) column of sections.
     Flickable {
@@ -260,6 +262,61 @@ Rectangle {
                     description: "super + i"
                     meta: "→"
                     onClicked: console.log("dashboard")
+                }
+            }
+
+            // ---- Section.Basic: the header opens it · checkable adds a switch ----
+            Text.Mono {
+                text: "Section.Basic · click the header (or Enter/Space) to open · the switch toggles on its own"
+                size: "label"
+                muted: true
+            }
+            Section.Basic {
+                width: 400
+                icon: "♪"
+                title: "audio"
+                description: gallery.output + " · 51%"
+                Button.ListItem {
+                    title: "speakers"
+                    meta: "built-in"
+                    checkable: true
+                    checked: gallery.output === "speakers"
+                    onClicked: gallery.output = "speakers"
+                }
+                Button.ListItem {
+                    title: "headphones"
+                    meta: "bluetooth"
+                    checkable: true
+                    checked: gallery.output === "headphones"
+                    onClicked: gallery.output = "headphones"
+                }
+            }
+            Section.Basic {
+                width: 400
+                open: true
+                icon: "≋"
+                title: "wi-fi"
+                description: gallery.wifi ? "home · 92%" : "off"
+                meta: gallery.wifi ? "3 networks" : ""
+                checkable: true
+                checked: gallery.wifi
+                onSwitched: {
+                    gallery.wifi = !gallery.wifi;
+                    console.log("wifi →", gallery.wifi);
+                }
+                Button.ListItem {
+                    icon: "≋"
+                    title: "home"
+                    meta: "92% · connected"
+                    enabled: gallery.wifi
+                    onClicked: console.log("open: home")
+                }
+                Button.ListItem {
+                    icon: "≋"
+                    title: "office-5g"
+                    meta: "64%"
+                    enabled: gallery.wifi
+                    onClicked: console.log("open: office-5g")
                 }
             }
 

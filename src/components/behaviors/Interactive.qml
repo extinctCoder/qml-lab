@@ -1,6 +1,14 @@
 import QtQuick
 import theme
 
+// Behavior only (DESIGN.md · States): makes its parent hoverable, pressable,
+// focusable with Tab, and activatable with a click, Enter or Space.
+// checkable: it holds a value (on/off). It is told `checked` and only reports
+// `activated`; whoever owns the value flips it. Checkable things react to Space only.
+// exclude: an item inside its area that has its own job (e.g. a switch in a header):
+// clicks there are left to that item, while the hover tint still covers the whole area.
+// It has no look of its own; it only draws the state tint and the focus ring.
+// Use: draw the component, then put `Interactive { anchors.fill: parent }` on top.
 Item {
     id: root
 
@@ -9,7 +17,7 @@ Item {
     property bool checkable: false
     property bool checked: false
     property var keys: checkable ? ["space"] : ["enter", "space"]
-    property Item exclude: null
+    property Item exclude: null                     // a region whose clicks belong to someone else
     readonly property bool hovered: hover.hovered
     readonly property bool pressed: tap.pressed && !tap.on_excluded
 
@@ -20,7 +28,7 @@ Item {
     Keys.onReturnPressed: if (keys.includes("enter"))
         activated()
     Keys.onEnterPressed: if (keys.includes("enter"))
-        activated()
+        activated()   // the keypad's Enter
     Keys.onSpacePressed: if (keys.includes("space"))
         activated()
 
@@ -61,17 +69,18 @@ Item {
     }
     TapHandler {
         id: tap
+        // did this press land on the excluded item?
         readonly property bool on_excluded: root.exclude !== null && pressed && root.inside_exclude(point.position)
-        onTapped: point => {
+        onTapped: (point) => {
             if (!root.inside_exclude(point.position))
-                root.activated();
+                root.activated()
         }
     }
 
     function inside_exclude(position) {
         if (!exclude || !exclude.visible)
-            return false;
-        const p = exclude.mapFromItem(root, position.x, position.y);
-        return p.x >= 0 && p.y >= 0 && p.x <= exclude.width && p.y <= exclude.height;
+            return false
+        const p = exclude.mapFromItem(root, position.x, position.y)
+        return p.x >= 0 && p.y >= 0 && p.x <= exclude.width && p.y <= exclude.height
     }
 }
