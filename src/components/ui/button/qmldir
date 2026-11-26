@@ -1,5 +1,7 @@
 module components.ui.button
 
+Base Base.qml
 Basic Basic.qml
-Toggle Toggle.qml
-Row Row.qml
+ListItem ListItem.qml
+Tile Tile.qml
+internal ItemContent ItemContent.qml
