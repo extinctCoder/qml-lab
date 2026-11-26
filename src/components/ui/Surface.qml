@@ -11,7 +11,7 @@ import theme
 //             a component sets these instead of its color, e.g. a primary button.
 // selected:   the tonal fill, and an accent border if it has one (same everywhere).
 // disabled (enabled: false): neutral gray, never a faded color (Material 3);
-//             its content can use `disabled_content` for its text.
+//             its content (text, marks) turns gray on its own, through its Base.
 // It can hold anything; it sizes itself around its content (one item), plus the padding.
 Rectangle {
     id: root
@@ -33,10 +33,6 @@ Rectangle {
         Colors.surface_container_highest    // 5: front, e.g. popups and menus
     ][Math.max(1, Math.min(5, level)) - 1]
 
-    // disabled (Material 3): containers and outlines at 12 %, content at 38 % of on_surface
-    readonly property color disabled_container: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled_container)
-    readonly property color disabled_content: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled)
-
     // does it show a fill at rest? (outlined and filled do, unless the fill is transparent)
     readonly property bool shows_fill: (appearance === "outlined" || appearance === "filled") && fill.a > 0
 
@@ -44,11 +40,11 @@ Rectangle {
     readonly property int pad_x: appearance === "none" ? 0 : padding_x
     readonly property int pad_y: appearance === "none" ? 0 : padding_y
 
-    color: !enabled ? (shows_fill || selected ? disabled_container : "transparent")
+    color: !enabled ? (shows_fill || selected ? States.disabled_fill : "transparent")
         : selected ? Colors.secondary_container
         : shows_fill ? fill : "transparent"
     border.width: appearance === "outlined" ? Shape.border : 0
-    border.color: !enabled ? disabled_container : selected ? Colors.primary : line
+    border.color: !enabled ? States.disabled_fill : selected ? Colors.primary : line
     radius: Shape.radius
 
     // its size: what the content wants (its implicit size), plus the padding.

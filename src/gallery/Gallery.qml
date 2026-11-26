@@ -47,7 +47,7 @@ Rectangle {
             Text.Mono {
                 text: "1 · Surface"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {
@@ -139,7 +139,7 @@ Rectangle {
             Text.Mono {
                 text: "2 · Text"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {
@@ -152,7 +152,7 @@ Rectangle {
                 Text.Mono {
                     text: "09:27"
                     size: "display"
-                    color: Colors.primary
+                    tone: Colors.primary
                 }
                 Text.Mono {
                     text: "title · quick settings"
@@ -247,7 +247,7 @@ Rectangle {
             Text.Mono {
                 text: "3 · Mark"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {
@@ -300,7 +300,7 @@ Rectangle {
             Text.Mono {
                 text: "4 · Button"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {
@@ -518,7 +518,7 @@ Rectangle {
             Text.Mono {
                 text: "5 · Section"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {
@@ -596,7 +596,7 @@ Rectangle {
             Text.Mono {
                 text: "6 · Feedback"
                 size: "title"
-                color: Colors.primary
+                tone: Colors.primary
             }
 
             Text.Mono {

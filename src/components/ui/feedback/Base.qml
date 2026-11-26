@@ -41,7 +41,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: root.icon
                 font.pixelSize: Type.title * 1.6
-                color: root.tone
+                tone: root.tone
             }
             Mark.Spinner {
                 visible: root.busy
@@ -117,7 +117,7 @@ Item {
                 visible: !root.busy && root.icon !== ""
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.icon
-                color: root.tone
+                tone: root.tone
             }
             Mark.Spinner {
                 visible: root.busy
@@ -127,7 +127,7 @@ Item {
             Text.Mono {
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.title
-                color: root.tone
+                tone: root.tone
             }
         }
         Row {

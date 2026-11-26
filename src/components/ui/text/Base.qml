@@ -8,10 +8,11 @@ Text {
     property string size: "body"
     property bool muted: false
     property bool surface: false
+    property color tone: muted ? Colors.on_surface_variant : Colors.on_surface   // its color role
 
     font.family: Type.family
     font.pixelSize: Type[size]
-    color: muted ? Colors.on_surface_variant : Colors.on_surface
+    color: enabled ? tone : States.disabled_text           // disabled: gray, like every content
     wrapMode: Text.Wrap
     padding: surface ? Spacing.inner : 0
 

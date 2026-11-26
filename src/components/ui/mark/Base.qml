@@ -7,5 +7,5 @@ Item {
     property bool on: false
     property color on_color: Colors.primary
     property color off_color: Colors.outline
-    readonly property color tone: on ? on_color : off_color
+    readonly property color tone: !enabled ? States.disabled_text : on ? on_color : off_color
 }

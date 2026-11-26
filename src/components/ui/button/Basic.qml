@@ -50,6 +50,6 @@ Base {
         anchors.centerIn: parent
         text: root.text
         size: "label"
-        color: !root.enabled ? root.disabled_content : root.selected ? Colors.on_secondary_container : root.look.label
+        tone: root.selected ? Colors.on_secondary_container : root.look.label
     }
 }

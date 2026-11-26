@@ -28,7 +28,7 @@ Base {
             width: size
             height: size
             radius: root.round ? size / 2 : Math.max(1, Shape.radius - 1)
-            color: root.on_color
+            color: root.tone
 
             Behavior on width {
                 Glide {}

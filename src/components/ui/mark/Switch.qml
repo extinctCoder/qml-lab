@@ -12,7 +12,7 @@ Base {
         id: track
         anchors.fill: parent
         radius: Shape.radius
-        color: root.on ? root.on_color : Colors.surface_container_highest
+        color: root.on ? root.tone : Colors.surface_container_highest
         border.width: Shape.border
         border.color: root.tone
 
@@ -28,7 +28,7 @@ Base {
             radius: Math.max(1, Shape.radius - 1)
             anchors.verticalCenter: parent.verticalCenter
             x: root.on ? track.width - width - 3 : 3
-            color: root.on ? Colors.on_primary : root.off_color
+            color: root.on ? Colors.on_primary : root.tone
 
             Behavior on x {
                 Glide {}

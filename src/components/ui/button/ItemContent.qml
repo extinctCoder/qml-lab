@@ -18,7 +18,6 @@ Item {
     width: parent ? parent.width : implicitWidth
     implicitWidth: lead.implicitWidth + Spacing.gap + (show_switch ? switch_mark.implicitWidth : meta_text.implicitWidth)
     implicitHeight: Math.max(lead.implicitHeight, meta_text.implicitHeight)
-    opacity: enabled ? 1 : States.disabled
 
     Row {
         id: lead
