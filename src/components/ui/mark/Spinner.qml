@@ -1,11 +1,14 @@
 import QtQuick
 import theme
 
-Item {
+Base {
     id: root
 
-    property color color: Colors.on_surface_variant
     property int size: 14
+
+    on: true
+    on_color: Colors.on_surface_variant
+    off_color: Colors.on_surface_variant
 
     implicitWidth: size
     implicitHeight: size
@@ -16,7 +19,7 @@ Item {
         onPaint: {
             const ctx = getContext("2d");
             ctx.reset();
-            ctx.strokeStyle = root.color;
+            ctx.strokeStyle = root.tone;
             ctx.lineWidth = Math.max(2, root.size / 8);
             ctx.lineCap = "square";
             ctx.beginPath();
@@ -25,7 +28,7 @@ Item {
             ctx.stroke();
         }
     }
-    onColorChanged: canvas.requestPaint()
+    onToneChanged: canvas.requestPaint()
     onSizeChanged: canvas.requestPaint()
 
     RotationAnimator on rotation {
@@ -33,6 +36,6 @@ Item {
         to: 360
         duration: 1000
         loops: Animation.Infinite
-        running: root.visible
+        running: root.on && root.visible
     }
 }

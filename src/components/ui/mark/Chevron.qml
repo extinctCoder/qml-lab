@@ -1,15 +1,15 @@
 import QtQuick
 import theme
 
-Item {
+Base {
     id: root
 
-    property bool open: false
-    property color color: Colors.on_surface_variant
+    on_color: Colors.on_surface_variant
+    off_color: Colors.on_surface_variant
 
     implicitWidth: 12
     implicitHeight: 12
-    rotation: open ? 90 : 0
+    rotation: on ? 90 : 0
 
     Behavior on rotation {
         NumberAnimation {
@@ -24,7 +24,7 @@ Item {
         onPaint: {
             const ctx = getContext("2d");
             ctx.reset();
-            ctx.strokeStyle = root.color;
+            ctx.strokeStyle = root.tone;
             ctx.lineWidth = 2;
             ctx.lineCap = "square";
             ctx.beginPath();
@@ -34,5 +34,5 @@ Item {
             ctx.stroke();
         }
     }
-    onColorChanged: canvas.requestPaint()
+    onToneChanged: canvas.requestPaint()
 }

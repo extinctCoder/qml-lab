@@ -15,11 +15,29 @@ Base {
     property bool checked: false
     signal switched
 
+    readonly property bool selected: checkable && checked
+    border.color: enabled && selected ? Colors.primary : Colors.outline_variant
+
     header_items: [
         Item {
             id: row
             width: parent.width
             implicitHeight: header.implicitHeight + Spacing.inner * 2
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: Shape.border
+                z: -2
+                color: root.enabled && root.selected ? Colors.secondary_container : "transparent"
+                radius: Shape.radius
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Motion.small
+                        easing.type: Motion.ease_out
+                    }
+                }
+            }
 
             Header {
                 id: header

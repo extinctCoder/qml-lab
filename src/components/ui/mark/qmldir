@@ -1,6 +1,8 @@
 module components.ui.mark
 
-SwitchMark SwitchMark.qml
-ChoiceMark ChoiceMark.qml
-ChevronMark ChevronMark.qml
-SpinnerMark SpinnerMark.qml
+internal Base Base.qml
+
+Switch Switch.qml
+Choice Choice.qml
+Chevron Chevron.qml
+Spinner Spinner.qml

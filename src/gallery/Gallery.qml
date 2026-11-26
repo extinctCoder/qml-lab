@@ -5,9 +5,10 @@ import components.ui.text as Text
 import components.ui.mark as Mark
 import components.ui.button as Button
 import components.ui.section as Section
+import components.ui.feedback as Feedback
 
 // The storybook: every component, in the order the library is built, bottom-up:
-// Surface → Text → Mark → Button → Section. Each part shows its variants and states.
+// Surface → Text → Mark → Button → Section → Feedback. Each part shows its variants and states.
 // It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
     id: gallery
@@ -250,7 +251,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "SwitchMark · ChoiceMark radio · ChoiceMark check · ChevronMark · click any to flip it"
+                text: "SwitchMark · ChoiceMark radio · ChoiceMark check · ChevronMark · SpinnerMark · click to flip them"
                 size: "label"
                 muted: true
             }
@@ -275,6 +276,9 @@ Rectangle {
                 }
                 Mark.ChevronMark {
                     open: marks.flipped
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Mark.SpinnerMark {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text.Mono {
@@ -574,9 +578,99 @@ Rectangle {
                 checkable: true
                 checked: gallery.bluetooth
                 onSwitched: gallery.bluetooth = !gallery.bluetooth
-                Text.Mono {
-                    text: "no paired devices"
-                    muted: true
+                Feedback.Empty {
+                    icon: "⌁"
+                    title: "no paired devices"
+                    description: "put your device in pairing mode, then pair it here"
+                    action: "pair a device"
+                    link: "open bluetui"
+                    onActed: console.log("pair a device")
+                    onLinked: console.log("open bluetui")
+                }
+            }
+
+            // =====================================================================
+            // 6 · Feedback: what's there when there's nothing to show (yet)
+            // =====================================================================
+            Text.Mono {
+                text: "6 · Feedback"
+                size: "title"
+                color: Colors.primary
+            }
+
+            Text.Mono {
+                text: "standard · Empty (action + link) · Loading (cancellable) · Error (details, retry)"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.inner
+
+                Surface {
+                    width: 200
+                    padding_x: 0
+                    padding_y: 0
+                    Feedback.Empty {
+                        icon: "✉"
+                        title: "all caught up"
+                        description: "no new notifications"
+                    }
+                }
+                Surface {
+                    width: 200
+                    padding_x: 0
+                    padding_y: 0
+                    Feedback.Loading {
+                        title: "searching…"
+                        description: "this can take a few seconds"
+                        cancellable: true
+                        onCancelled: console.log("cancelled")
+                    }
+                }
+                Surface {
+                    width: 232
+                    padding_x: 0
+                    padding_y: 0
+                    Feedback.Error {
+                        icon: "≋"
+                        title: "couldn't connect"
+                        description: "office-5g refused the password"
+                        details: "nmcli: secrets were required, but not provided"
+                        onRetried: console.log("retried")
+                    }
+                }
+            }
+
+            Text.Mono {
+                text: "compact · one line · the actions at the far right"
+                size: "label"
+                muted: true
+            }
+            Surface {
+                width: 440
+                padding_x: 0
+                padding_y: 0
+                Column {
+                    width: parent.width
+                    Feedback.Empty {
+                        compact: true
+                        icon: "≋"
+                        title: "no networks found"
+                        action: "scan again"
+                        onActed: console.log("scan again")
+                    }
+                    Feedback.Loading {
+                        compact: true
+                        title: "scanning…"
+                    }
+                    Feedback.Error {
+                        compact: true
+                        icon: "≋"
+                        title: "scan failed"
+                        link: "open nmtui"
+                        onRetried: console.log("retried")
+                        onLinked: console.log("open nmtui")
+                    }
                 }
             }
         }   // end of the sections Column
