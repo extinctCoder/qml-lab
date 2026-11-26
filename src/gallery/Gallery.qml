@@ -279,6 +279,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Mark.Spinner {
+                    on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text.Mono {

@@ -7,8 +7,6 @@ Base {
     property int size: 14
 
     on: true
-    on_color: Colors.on_surface_variant
-    off_color: Colors.on_surface_variant
 
     implicitWidth: size
     implicitHeight: size

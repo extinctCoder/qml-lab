@@ -47,18 +47,18 @@ Item {
                 visible: root.busy
                 anchors.horizontalCenter: parent.horizontalCenter
                 size: Type.title * 1.4
-                color: root.tone
+                on_color: root.tone
             }
         }
         Text.Mono {
             width: parent.width
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment: Qt.AlignHCenter
             text: root.title
         }
         Text.Mono {
             visible: root.description !== ""
             width: parent.width
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment: Qt.AlignHCenter
             text: root.description
             size: "label"
             muted: true
@@ -122,7 +122,7 @@ Item {
             Mark.Spinner {
                 visible: root.busy
                 anchors.verticalCenter: parent.verticalCenter
-                color: root.tone
+                on_color: root.tone
             }
             Text.Mono {
                 anchors.verticalCenter: parent.verticalCenter
