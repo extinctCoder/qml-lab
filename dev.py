@@ -32,7 +32,9 @@ def snapshot():
 
 
 def load(view, target):
-    view.engine().clearComponentCache()  # forget the old versions of every file
+    view.setSource(QUrl())
+    view.engine().clearSingletons()
+    view.engine().clearComponentCache()
     view.setSource(QUrl.fromLocalFile(str(target.resolve())))
     return [e.toString() for e in view.errors()]
 
@@ -45,6 +47,7 @@ if __name__ == "__main__":
     target = Path(sys.argv[1]) if len(sys.argv) > 1 else SRC / "main.qml"
 
     app = QGuiApplication(sys.argv)
+    app.styleHints().setTabFocusBehavior(Qt.TabFocusBehavior.TabFocusAllControls)
     view = QQuickView()
     view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)  # stay above the editor
     view.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)

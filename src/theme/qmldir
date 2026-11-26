@@ -1,0 +1,6 @@
+module theme
+singleton Colors Colors.qml
+singleton Motion Motion.qml
+singleton Shape Shape.qml
+singleton Spacing Spacing.qml
+singleton Type Type.qml

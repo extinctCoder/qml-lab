@@ -131,3 +131,8 @@ makes you wait at the end.
 | panel closing                 | 150 ms   | ease-in (fast finish) |
 
 Only things that change because of an action or new data move.
+
+## Naming
+
+Roles are an interface; themes implement it (Material from the wallpaper first,
+others later). Values are snake_case (`on_primary`), types are PascalCase (`Colors`).
