@@ -9,8 +9,9 @@ Item {
     property bool checkable: false
     property bool checked: false
     property var keys: checkable ? ["space"] : ["enter", "space"]
+    property Item exclude: null
     readonly property bool hovered: hover.hovered
-    readonly property bool pressed: tap.pressed
+    readonly property bool pressed: tap.pressed && !tap.on_excluded
 
     signal activated
 
@@ -19,7 +20,7 @@ Item {
     Keys.onReturnPressed: if (keys.includes("enter"))
         activated()
     Keys.onEnterPressed: if (keys.includes("enter"))
-        activated()   // the keypad's Enter
+        activated()
     Keys.onSpacePressed: if (keys.includes("space"))
         activated()
 
@@ -60,6 +61,17 @@ Item {
     }
     TapHandler {
         id: tap
-        onTapped: root.activated()
+        readonly property bool on_excluded: root.exclude !== null && pressed && root.inside_exclude(point.position)
+        onTapped: point => {
+            if (!root.inside_exclude(point.position))
+                root.activated();
+        }
+    }
+
+    function inside_exclude(position) {
+        if (!exclude || !exclude.visible)
+            return false;
+        const p = exclude.mapFromItem(root, position.x, position.y);
+        return p.x >= 0 && p.y >= 0 && p.x <= exclude.width && p.y <= exclude.height;
     }
 }
