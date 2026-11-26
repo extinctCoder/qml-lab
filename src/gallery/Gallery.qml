@@ -27,6 +27,9 @@ Rectangle {
     property bool stay_awake: false
     property real volume: 51
     property real brightness: 70
+    property real firefox: 40
+    property real spotify: 72
+    property real discord: 20
 
     // The scrollable area: a window-sized view onto the (taller) column of parts.
     Flickable {
@@ -534,19 +537,53 @@ Rectangle {
                 icon: "♪"
                 title: "audio"
                 description: gallery.output + " · " + Math.round(gallery.volume) + "%"
-                // the volume first: a slider, padded like the list items below it
+                // volumes first: the output, then each app; titles line the bars up
                 Surface {
                     width: parent.width
                     appearance: "ghost"
                     padding_x: Spacing.inner
                     padding_y: Spacing.tight
-                    Range.Slider {
+                    Column {
                         width: parent.width
-                        icon: "♪"
-                        value: gallery.volume
-                        label: Math.round(gallery.volume) + "%"
-                        onMoved: value => gallery.volume = value
+                        Range.Slider {
+                            width: parent.width
+                            title: "output"
+                            title_width: 64
+                            value: gallery.volume
+                            label: Math.round(gallery.volume) + "%"
+                            onMoved: value => gallery.volume = value
+                        }
+                        Range.Slider {
+                            width: parent.width
+                            title: "firefox"
+                            title_width: 64
+                            value: gallery.firefox
+                            label: Math.round(gallery.firefox) + "%"
+                            onMoved: value => gallery.firefox = value
+                        }
+                        Range.Slider {
+                            width: parent.width
+                            title: "spotify"
+                            title_width: 64
+                            value: gallery.spotify
+                            label: Math.round(gallery.spotify) + "%"
+                            onMoved: value => gallery.spotify = value
+                        }
+                        Range.Slider {
+                            width: parent.width
+                            title: "discord"
+                            title_width: 64
+                            value: gallery.discord
+                            label: Math.round(gallery.discord) + "%"
+                            onMoved: value => gallery.discord = value
+                        }
                     }
+                }
+                // a line between the volumes and the outputs
+                Rectangle {
+                    width: parent.width
+                    height: Shape.border
+                    color: Colors.outline_variant
                 }
                 Button.ListItem {
                     title: "speakers"
@@ -734,7 +771,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Basic · read-only: the same bar, no handle"
+                text: "Basic · read-only: the same bar, no handle · a title_width lines bars up"
                 size: "label"
                 muted: true
             }
@@ -749,9 +786,17 @@ Rectangle {
                 }
                 Range.Basic {
                     width: parent.width
-                    icon: "◧"
+                    title: "cpu 0"
+                    title_width: 56
                     value: 37
-                    label: "cpu 37%"
+                    label: "37%"
+                }
+                Range.Basic {
+                    width: parent.width
+                    title: "cpu 1"
+                    title_width: 56
+                    value: 64
+                    label: "64%"
                 }
                 Range.Basic {
                     width: parent.width
