@@ -6,9 +6,10 @@ import components.ui.mark as Mark
 import components.ui.button as Button
 import components.ui.section as Section
 import components.ui.feedback as Feedback
+import components.ui.range as Range
 
 // The storybook: every component, in the order the library is built, bottom-up:
-// Surface → Text → Mark → Button → Section → Feedback. Each part shows its variants and states.
+// Surface → Text → Mark → Button → Section → Feedback → Range. Each part shows its variants and states.
 // It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
     id: gallery
@@ -24,6 +25,8 @@ Rectangle {
     property bool bluetooth: false
     property bool night_light: true
     property bool stay_awake: false
+    property real volume: 51
+    property real brightness: 70
 
     // The scrollable area: a window-sized view onto the (taller) column of parts.
     Flickable {
@@ -672,6 +675,74 @@ Rectangle {
                         onRetried: console.log("retried")
                         onLinked: console.log("open nmtui")
                     }
+                }
+            }
+
+            // =====================================================================
+            // 7 · Range: a value between a minimum and a maximum, as a block bar
+            // =====================================================================
+            Text.Mono {
+                text: "7 · Range"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Slider · drag or click the bar · Tab to it, then ← → (step) · Page Up/Down · Home/End"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                spacing: Spacing.gap
+                Range.Slider {
+                    width: parent.width
+                    icon: "♪"
+                    value: gallery.volume
+                    label: Math.round(gallery.volume) + "%"
+                    onMoved: value => gallery.volume = value
+                }
+                Range.Slider {
+                    width: parent.width
+                    icon: "☀"
+                    value: gallery.brightness
+                    step: 5
+                    label: Math.round(gallery.brightness) + "%"
+                    onMoved: value => gallery.brightness = value
+                }
+                Range.Slider {
+                    width: parent.width
+                    icon: "♪"
+                    value: 30
+                    label: "30%"
+                    enabled: false
+                }
+            }
+
+            Text.Mono {
+                text: "Basic · read-only: the same bar, no handle"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                spacing: Spacing.gap
+                Range.Basic {
+                    width: parent.width
+                    icon: "▮"
+                    value: 82
+                    label: "82%"
+                }
+                Range.Basic {
+                    width: parent.width
+                    icon: "◧"
+                    value: 37
+                    label: "cpu 37%"
+                }
+                Range.Basic {
+                    width: parent.width
+                    value: gallery.volume
+                    label: "follows the volume"
                 }
             }
         }   // end of the sections Column
