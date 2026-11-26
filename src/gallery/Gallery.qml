@@ -251,7 +251,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "SwitchMark · ChoiceMark radio · ChoiceMark check · ChevronMark · SpinnerMark · click to flip them"
+                text: "Switch · Choice radio · Choice check · Chevron · Spinner · click to flip them"
                 size: "label"
                 muted: true
             }
@@ -275,7 +275,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Mark.Chevron {
-                    open: marks.flipped
+                    on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Mark.Spinner {
