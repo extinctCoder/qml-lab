@@ -3,6 +3,8 @@ import QtQuick
 
 QtObject {
     readonly property color surface: "#11140e"
+    readonly property color surface_container_lowest: "#0c0f09"
+    readonly property color surface_container_low: "#191d16"
     readonly property color surface_container: "#1e211a"
     readonly property color surface_container_high: "#282b24"
     readonly property color surface_container_highest: "#33362e"
