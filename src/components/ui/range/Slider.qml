@@ -17,66 +17,81 @@ Base {
         if (s !== value)
             moved(s);
     }
-
     function value_at(x) {
-        return from + Math.max(0, Math.min(1, x / track.width)) * (to - from);
+        return from + Math.max(0, Math.min(1, x / bar.width)) * (to - from);
     }
 
-    Rectangle {
-        parent: root.track
-        visible: root.enabled
-        x: root.track.width * root.ratio - width / 2
-        anchors.verticalCenter: parent.verticalCenter
-        width: 3
-        height: parent.height + 4
-        radius: 1
-        color: Colors.on_surface
+    implicitHeight: line.implicitHeight
 
-        Behavior on x {
-            Glide {}
-        }
-    }
-
-    Interactive {
-        id: interactive
-        parent: root.track
+    Line {
+        id: line
         anchors.fill: parent
-        anchors.margins: -Spacing.tight
-        keys: []
+        icon: root.icon
+        title: root.title
+        title_width: root.title_width
+        label: root.label
 
-        Keys.onLeftPressed: root.move_to(root.value - root.step)
-        Keys.onDownPressed: root.move_to(root.value - root.step)
-        Keys.onRightPressed: root.move_to(root.value + root.step)
-        Keys.onUpPressed: root.move_to(root.value + root.step)
-        Keys.onPressed: event => {
-            if (event.key === Qt.Key_PageUp)
-                root.move_to(root.value + root.step * 10);
-            else if (event.key === Qt.Key_PageDown)
-                root.move_to(root.value - root.step * 10);
-            else if (event.key === Qt.Key_Home)
-                root.move_to(root.from);
-            else if (event.key === Qt.Key_End)
-                root.move_to(root.to);
-            else
-                return;
-            event.accepted = true;
-        }
-    }
+        Bar {
+            id: bar
+            ratio: root.ratio
+            buffered_ratio: root.buffered_ratio
+            tone: root.shown_tone
+            clip: false
 
-    MouseArea {
-        parent: root.track
-        anchors.fill: parent
-        anchors.margins: -Spacing.tight
-        z: 1
-        enabled: root.enabled
-        cursorShape: Qt.PointingHandCursor
-        onPressed: mouse => {
-            interactive.forceActiveFocus();
-            root.move_to(root.value_at(mouse.x - Spacing.tight));
-        }
-        onPositionChanged: mouse => {
-            if (pressed)
-                root.move_to(root.value_at(mouse.x - Spacing.tight));
+            Rectangle {
+                visible: root.enabled
+                x: bar.width * root.ratio - width / 2
+                anchors.verticalCenter: parent.verticalCenter
+                width: 3
+                height: parent.height + 4
+                radius: 1
+                color: Colors.on_surface
+
+                Behavior on x {
+                    Glide {}
+                }
+            }
+
+            Interactive {
+                id: interactive
+                anchors.fill: parent
+                anchors.margins: -Spacing.tight
+                keys: []
+
+                Keys.onLeftPressed: root.move_to(root.value - root.step)
+                Keys.onDownPressed: root.move_to(root.value - root.step)
+                Keys.onRightPressed: root.move_to(root.value + root.step)
+                Keys.onUpPressed: root.move_to(root.value + root.step)
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_PageUp)
+                        root.move_to(root.value + root.step * 10);
+                    else if (event.key === Qt.Key_PageDown)
+                        root.move_to(root.value - root.step * 10);
+                    else if (event.key === Qt.Key_Home)
+                        root.move_to(root.from);
+                    else if (event.key === Qt.Key_End)
+                        root.move_to(root.to);
+                    else
+                        return;
+                    event.accepted = true;
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                anchors.margins: -Spacing.tight
+                z: 1
+                enabled: root.enabled
+                cursorShape: Qt.PointingHandCursor
+                onPressed: mouse => {
+                    interactive.forceActiveFocus();
+                    root.move_to(root.value_at(mouse.x - Spacing.tight));
+                }
+                onPositionChanged: mouse => {
+                    if (pressed)
+                        root.move_to(root.value_at(mouse.x - Spacing.tight));
+                }
+            }
         }
     }
 }

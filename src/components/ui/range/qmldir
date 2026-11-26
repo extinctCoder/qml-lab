@@ -1,6 +1,12 @@
 module components.ui.range
 
 internal Base Base.qml
+internal Line Line.qml
+internal Bar Bar.qml
 
 Basic Basic.qml
 Slider Slider.qml
+Progress Progress.qml
+Steps Steps.qml
+Ring Ring.qml
+Seek Seek.qml

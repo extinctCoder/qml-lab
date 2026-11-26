@@ -8,16 +8,12 @@ import components.ui.section as Section
 import components.ui.feedback as Feedback
 import components.ui.range as Range
 
-// The storybook: every component, in the order the library is built, bottom-up:
-// Surface → Text → Mark → Button → Section → Feedback → Range. Each part shows its variants and states.
-// It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
     id: gallery
     width: 680
     height: 800
     color: Colors.surface
 
-    // the gallery owns the values its components show, like an OS control will later
     property string power: "eco"
     property bool silent: false
     property string output: "headphones"
@@ -30,14 +26,14 @@ Rectangle {
     property real firefox: 40
     property real spotify: 72
     property real discord: 20
+    property real position: 84
 
-    // The scrollable area: a window-sized view onto the (taller) column of parts.
     Flickable {
         id: scroller
         anchors.fill: parent
         contentWidth: width
         contentHeight: sections.implicitHeight + Spacing.edge * 2
-        boundsBehavior: Flickable.StopAtBounds      // no rubber-band bounce: calm by default
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
 
         Column {
@@ -47,9 +43,6 @@ Rectangle {
             width: scroller.width - Spacing.edge * 2
             spacing: Spacing.gap
 
-            // =====================================================================
-            // 1 · Surface: our look for any box
-            // =====================================================================
             Text.Mono {
                 text: "1 · Surface"
                 size: "title"
@@ -139,9 +132,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 2 · Text: Mono and Header
-            // =====================================================================
             Text.Mono {
                 text: "2 · Text"
                 size: "title"
@@ -247,9 +237,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 3 · Mark: the drawn markers, on their own (click to flip them)
-            // =====================================================================
             Text.Mono {
                 text: "3 · Mark"
                 size: "title"
@@ -300,9 +287,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 4 · Button: Basic · ListItem · Tile
-            // =====================================================================
             Text.Mono {
                 text: "4 · Button"
                 size: "title"
@@ -518,9 +502,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 5 · Section: built from all of the above
-            // =====================================================================
             Text.Mono {
                 text: "5 · Section"
                 size: "title"
@@ -537,7 +518,6 @@ Rectangle {
                 icon: "♪"
                 title: "audio"
                 description: gallery.output + " · " + Math.round(gallery.volume) + "%"
-                // volumes first: the output, then each app; titles line the bars up
                 Surface {
                     width: parent.width
                     appearance: "ghost"
@@ -579,7 +559,6 @@ Rectangle {
                         }
                     }
                 }
-                // a line between the volumes and the outputs
                 Rectangle {
                     width: parent.width
                     height: Shape.border
@@ -644,9 +623,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 6 · Feedback: what's there when there's nothing to show (yet)
-            // =====================================================================
             Text.Mono {
                 text: "6 · Feedback"
                 size: "title"
@@ -729,9 +705,6 @@ Rectangle {
                 }
             }
 
-            // =====================================================================
-            // 7 · Range: a value between a minimum and a maximum, as a block bar
-            // =====================================================================
             Text.Mono {
                 text: "7 · Range"
                 size: "title"
@@ -804,10 +777,101 @@ Rectangle {
                     label: "follows the volume"
                 }
             }
-        }   // end of the sections Column
-    }       // end of the Flickable
 
-    // a thin scroll position marker on the right edge, only when there is more to scroll
+            Text.Mono {
+                text: "Progress · a value, or indeterminate (the stripe moves) · a bare bar works as a countdown"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                spacing: Spacing.gap
+                Range.Progress {
+                    width: parent.width
+                    title: "update"
+                    title_width: 64
+                    value: 62
+                    label: "62%"
+                }
+                Range.Progress {
+                    width: parent.width
+                    title: "scanning"
+                    title_width: 64
+                    indeterminate: true
+                    label: "…"
+                }
+                Range.Progress {
+                    width: parent.width
+                    value: 45
+                }
+            }
+
+            Text.Mono {
+                text: "Steps · a value as rising bars: 0 · 10 · 50 · 75 · 100 · small enough for the bar"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.edge
+                Range.Steps {
+                    value: 0
+                }
+                Range.Steps {
+                    value: 10
+                }
+                Range.Steps {
+                    value: 50
+                }
+                Range.Steps {
+                    icon: "≋"
+                    value: 75
+                }
+                Range.Steps {
+                    value: 100
+                    label: "full"
+                }
+            }
+
+            Text.Mono {
+                text: "Ring · the bar bent into a circle, for the dashboard · disabled turns gray"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.edge
+                Range.Ring {
+                    value: 37
+                    label: "37%"
+                    title: "cpu"
+                }
+                Range.Ring {
+                    value: gallery.volume
+                    label: Math.round(gallery.volume) + "%"
+                    title: "volume"
+                }
+                Range.Ring {
+                    value: 70
+                    label: "70%"
+                    title: "disk"
+                    enabled: false
+                }
+            }
+
+            Text.Mono {
+                text: "Seek · a slider in seconds, shown as m:ss · the darker part is already loaded"
+                size: "label"
+                muted: true
+            }
+            Range.Seek {
+                width: 420
+                value: gallery.position
+                to: 231
+                buffered: 166
+                onMoved: value => gallery.position = value
+            }
+        }
+    }
+
     Rectangle {
         visible: scroller.contentHeight > scroller.height
         anchors.right: parent.right
@@ -819,7 +883,6 @@ Rectangle {
         height: scroller.visibleArea.heightRatio * scroller.height
     }
 
-    // keyboard first: when Tab moves focus outside the visible part, scroll it into view
     Connections {
         target: gallery.Window.window
         function onActiveFocusItemChanged() {
