@@ -533,7 +533,21 @@ Rectangle {
                 width: 420
                 icon: "♪"
                 title: "audio"
-                description: gallery.output + " · 51%"
+                description: gallery.output + " · " + Math.round(gallery.volume) + "%"
+                // the volume first: a slider, padded like the list items below it
+                Surface {
+                    width: parent.width
+                    appearance: "ghost"
+                    padding_x: Spacing.inner
+                    padding_y: Spacing.tight
+                    Range.Slider {
+                        width: parent.width
+                        icon: "♪"
+                        value: gallery.volume
+                        label: Math.round(gallery.volume) + "%"
+                        onMoved: value => gallery.volume = value
+                    }
+                }
                 Button.ListItem {
                     title: "speakers"
                     meta: "built-in"
