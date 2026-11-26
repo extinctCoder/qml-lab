@@ -1,0 +1,4 @@
+module components.ui.TextMono
+
+Mono Mono.qml
+Header Header.qml

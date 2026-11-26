@@ -1,130 +1,246 @@
 import QtQuick
 import theme
-import components
+import components.ui
+import components.ui.text as Text
+import components.ui.button as Button
 
-// The storybook: every component, in its variants and states.
+// The storybook: the button family (Basic and Toggle), the text family (Mono and Header),
+// and Surface, our look for any box.
+// It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
-    width: 560
-    height: 520
+    id: gallery
+    width: 680
+    height: 440
     color: Colors.surface
 
-    Column {
+    // the gallery owns the values the toggles show
+    property bool silent: false
+    property string power: "eco"
+
+    // The scrollable area: a window-sized view onto the (taller) column of sections.
+    Flickable {
+        id: scroller
         anchors.fill: parent
-        anchors.margins: Spacing.edge
-        spacing: Spacing.gap
-
-        // ---- Mono: text sizes and roles ----
-        Mono {
-            text: "mono · sizes and roles"
-            size: "label"
-            muted: true
-        }
+        contentWidth: width
+        contentHeight: sections.implicitHeight + Spacing.edge * 2
+        boundsBehavior: Flickable.StopAtBounds      // no rubber-band bounce: calm by default
+        clip: true
 
         Column {
-            spacing: Spacing.tight
+            id: sections
+            x: Spacing.edge
+            y: Spacing.edge
+            width: scroller.width - Spacing.edge * 2
+            spacing: Spacing.gap
 
-            Mono {
-                text: "09:27"
-                size: "display"
-                color: Colors.primary
-            }
-            Mono {
-                text: "title · quick settings"
-                size: "title"
-            }
-            Mono {
-                text: "body · wi-fi · home · 92%"
-            }
-            Mono {
-                text: "body, muted · connected since 08:14"
-                muted: true
-            }
-            Mono {
-                text: "label, muted · small captions"
+            // ---- Button.Basic: an action ----
+            Text.Mono {
+                text: "Button.Basic · five variants · click: see the terminal · Tab moves focus"
                 size: "label"
                 muted: true
             }
-        }
 
-        // ---- Button: the five variants ----
-        Mono {
-            text: "button · variants, loudest to quietest (click: see the terminal)"
-            size: "label"
-            muted: true
-        }
+            Row {
+                spacing: Spacing.inner
 
-        Row {
-            spacing: Spacing.inner
+                Button.Basic {
+                    text: "save"
+                    onClicked: console.log("save")
+                }
+                Button.Basic {
+                    text: "next"
+                    variant: "tonal"
+                    onClicked: console.log("next")
+                }
+                Button.Basic {
+                    text: "back"
+                    variant: "outline"
+                    onClicked: console.log("back")
+                }
+                Button.Basic {
+                    text: "cancel"
+                    variant: "ghost"
+                    onClicked: console.log("cancel")
+                }
+                Button.Basic {
+                    text: "delete"
+                    variant: "danger"
+                    onClicked: console.log("delete")
+                }
+                Button.Basic {
+                    text: "off"
+                    enabled: false
+                }
+            }
 
-            Button {
-                text: "save"
-                onClicked: console.log("save")
-            }
-            Button {
-                text: "next"
-                variant: "tonal"
-                onClicked: console.log("next")
-            }
-            Button {
-                text: "back"
-                variant: "outline"
-                onClicked: console.log("back")
-            }
-            Button {
-                text: "cancel"
-                variant: "ghost"
-                onClicked: console.log("cancel")
-            }
-            Button {
-                text: "delete"
-                variant: "danger"
-                onClicked: console.log("delete")
-            }
-        }
-
-        // ---- Button: states ----
-        Mono {
-            text: "button · states"
-            size: "label"
-            muted: true
-        }
-
-        Column {
-            spacing: Spacing.tight
-
-            Mono {
-                text: "hover: a light tint · press and hold: a bit stronger"
-                size: "label"
-            }
-            Mono {
-                text: "click the window, then Tab: a focus ring moves across the buttons"
-                size: "label"
-            }
-            Mono {
-                text: "Enter or Space: clicks the focused button"
-                size: "label"
-            }
-        }
-
-        Row {
-            spacing: Spacing.inner
-
-            Button {
-                text: "save"
-                enabled: false
-                onClicked: console.log("disabled: should never print")
-            }
-            Button {
-                text: "back"
-                variant: "outline"
-                enabled: false
-            }
-            Mono {
-                text: "← disabled: faded, ignores clicks, skipped by Tab"
+            Text.Mono {
+                text: "Button.Basic · stretched: the width comes from the layout"
                 size: "label"
                 muted: true
-                anchors.verticalCenter: parent.verticalCenter
             }
+
+            Button.Basic {
+                width: 420
+                text: "connect"
+                onClicked: console.log("connect")
+            }
+
+            // ---- Button.Toggle: holds a value ----
+            Text.Mono {
+                text: "Button.Toggle · one of several (Space or click)"
+                size: "label"
+                muted: true
+            }
+
+            Row {
+                spacing: Spacing.tight
+
+                Button.Toggle {
+                    text: "eco"
+                    checked: gallery.power === "eco"
+                    onClicked: {
+                        gallery.power = "eco";
+                        console.log("power →", gallery.power);
+                    }
+                }
+                Button.Toggle {
+                    text: "balanced"
+                    checked: gallery.power === "balanced"
+                    onClicked: {
+                        gallery.power = "balanced";
+                        console.log("power →", gallery.power);
+                    }
+                }
+                Button.Toggle {
+                    text: "performance"
+                    checked: gallery.power === "performance"
+                    onClicked: {
+                        gallery.power = "performance";
+                        console.log("power →", gallery.power);
+                    }
+                }
+            }
+
+            Text.Mono {
+                text: "Button.Toggle · on/off"
+                size: "label"
+                muted: true
+            }
+
+            Button.Toggle {
+                text: gallery.silent ? "silent: on" : "silent: off"
+                checked: gallery.silent
+                onClicked: {
+                    gallery.silent = !gallery.silent;
+                    console.log("silent →", gallery.silent);
+                }
+            }
+
+            // ---- Text: Mono and Header ----
+            Text.Mono {
+                text: "Header · icon spans title + description"
+                size: "label"
+                muted: true
+            }
+            Text.Header {
+                icon: "≋"
+                title: "wi-fi"
+                description: "home network · 92%"
+            }
+
+            Text.Mono {
+                text: "Header · no description: the icon matches the title"
+                size: "label"
+                muted: true
+            }
+            Text.Header {
+                icon: "≋"
+                title: "wi-fi"
+            }
+
+            Text.Mono {
+                text: "Header · bigger sizes: the icon grows with the text"
+                size: "label"
+                muted: true
+            }
+            Text.Header {
+                icon: "♪"
+                title: "Back in Black"
+                description: "AC/DC · 1980"
+                title_size: "display"
+                description_size: "body"
+            }
+
+            // ---- Surface: our look for any box ----
+            Text.Mono {
+                text: "Surface · holds anything · outlined, filled, ghost"
+                size: "label"
+                muted: true
+            }
+
+            Row {
+                spacing: Spacing.gap
+
+                Surface {
+                    Text.Mono {
+                        text: "outlined"
+                    }
+                }
+                Surface {
+                    appearance: "filled"
+                    Text.Mono {
+                        text: "filled"
+                    }
+                }
+                Surface {
+                    appearance: "ghost"
+                    Text.Mono {
+                        text: "ghost"
+                    }
+                }
+            }
+
+            Surface {
+                Column {
+                    spacing: Spacing.tight
+                    Text.Header {
+                        icon: "≋"
+                        title: "wi-fi"
+                        description: "home network"
+                    }
+                    Text.Mono {
+                        text: "connected · 92%"
+                    }
+                }
+            }
+        }   // end of the sections Column
+    }       // end of the Flickable
+
+    // a thin scroll position marker on the right edge, only when there is more to scroll
+    Rectangle {
+        visible: scroller.contentHeight > scroller.height
+        anchors.right: parent.right
+        anchors.rightMargin: 2
+        width: 3
+        radius: Shape.radius
+        color: Colors.outline_variant
+        y: scroller.visibleArea.yPosition * scroller.height
+        height: scroller.visibleArea.heightRatio * scroller.height
+    }
+
+    // keyboard first: when Tab moves focus outside the visible part, scroll it into view
+    Connections {
+        target: gallery.Window.window
+        function onActiveFocusItemChanged() {
+            const item = gallery.Window.activeFocusItem;
+            if (!item)
+                return;
+            const top = item.mapToItem(scroller.contentItem, 0, 0).y - Spacing.edge;
+            const bottom = top + item.height + Spacing.edge * 2;
+            if (top < scroller.contentY)
+                scroller.contentY = Math.max(0, top);
+            else if (bottom > scroller.contentY + scroller.height)
+                scroller.contentY = Math.min(scroller.contentHeight - scroller.height, bottom - scroller.height);
         }
     }
 }
