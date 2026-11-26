@@ -1,7 +1,9 @@
 module components.ui.button
 
-Base Base.qml
+internal Base Base.qml
+internal ItemContent ItemContent.qml
+internal SwitchmMark SwitchmMark.qml
+
 Basic Basic.qml
 ListItem ListItem.qml
 Tile Tile.qml
-internal ItemContent ItemContent.qml

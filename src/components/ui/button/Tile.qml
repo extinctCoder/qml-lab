@@ -8,7 +8,6 @@ Base {
     required property string title
     property string description: ""
     property string meta: ""
-    property string mark: "check"            // checkable: "check" or "radio"
 
     padding_x: Spacing.inner
     padding_y: Spacing.inner
@@ -17,8 +16,8 @@ Base {
     border.color: enabled && selected ? Colors.primary : Colors.outline_variant
 
     ItemContent {
-        mark: !root.checkable ? "" : root.mark === "check" ? (root.checked ? "■" : "□") : (root.checked ? "●" : "○")
-        marked: root.selected
+        show_switch: root.checkable
+        switch_on: root.checked
         icon: root.icon
         title: root.title
         description: root.description

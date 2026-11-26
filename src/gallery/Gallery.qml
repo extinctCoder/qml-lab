@@ -4,7 +4,7 @@ import components.ui
 import components.ui.text as Text
 import components.ui.button as Button
 
-// The storybook: the button family (Basic and Toggle), the text family (Mono and Header),
+// The storybook: the button family (Basic, ListItem, Tile), the text family (Mono and Header),
 // and Surface, our look for any box. Everything with a box gets it from Surface.
 // It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
@@ -13,10 +13,12 @@ Rectangle {
     height: 440
     color: Colors.surface
 
-    // the gallery owns the values the toggles show
+    // the gallery owns the values the checkable buttons, list items and tiles show
     property bool silent: false
     property string power: "eco"
     property string output: "headphones"
+    property bool night_light: true
+    property bool stay_awake: false
 
     // The scrollable area: a window-sized view onto the (taller) column of sections.
     Flickable {
@@ -86,9 +88,9 @@ Rectangle {
                 onClicked: console.log("connect")
             }
 
-            // ---- Button.Toggle: holds a value ----
+            // ---- Button.Basic, checkable: holds a value ----
             Text.Mono {
-                text: "Button.Toggle · one of several (Space or click)"
+                text: "Button.Basic · checkable: one of several (Space or click)"
                 size: "label"
                 muted: true
             }
@@ -96,7 +98,9 @@ Rectangle {
             Row {
                 spacing: Spacing.tight
 
-                Button.Toggle {
+                Button.Basic {
+                    variant: "outline"
+                    checkable: true
                     text: "eco"
                     checked: gallery.power === "eco"
                     onClicked: {
@@ -104,7 +108,9 @@ Rectangle {
                         console.log("power →", gallery.power);
                     }
                 }
-                Button.Toggle {
+                Button.Basic {
+                    variant: "outline"
+                    checkable: true
                     text: "balanced"
                     checked: gallery.power === "balanced"
                     onClicked: {
@@ -112,7 +118,9 @@ Rectangle {
                         console.log("power →", gallery.power);
                     }
                 }
-                Button.Toggle {
+                Button.Basic {
+                    variant: "outline"
+                    checkable: true
                     text: "performance"
                     checked: gallery.power === "performance"
                     onClicked: {
@@ -123,12 +131,14 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Button.Toggle · on/off"
+                text: "Button.Basic · checkable: on/off"
                 size: "label"
                 muted: true
             }
 
-            Button.Toggle {
+            Button.Basic {
+                variant: "outline"
+                checkable: true
                 text: gallery.silent ? "silent: on" : "silent: off"
                 checked: gallery.silent
                 onClicked: {
@@ -137,9 +147,9 @@ Rectangle {
                 }
             }
 
-            // ---- Button.Row: one line in a list ----
+            // ---- Button.ListItem: one line in a list ----
             Text.Mono {
-                text: "Button.Row · checkable, one of several (● ○): click or Space"
+                text: "Button.ListItem · checkable, one of several (● ○): click or Space"
                 size: "label"
                 muted: true
             }
@@ -147,7 +157,7 @@ Rectangle {
                 width: 380
                 Column {
                     width: parent.width
-                    Button.Row {
+                    Button.ListItem {
                         title: "speakers"
                         meta: "built-in"
                         checkable: true
@@ -157,7 +167,7 @@ Rectangle {
                             console.log("output →", gallery.output);
                         }
                     }
-                    Button.Row {
+                    Button.ListItem {
                         title: "headphones"
                         meta: "bluetooth"
                         checkable: true
@@ -167,7 +177,7 @@ Rectangle {
                             console.log("output →", gallery.output);
                         }
                     }
-                    Button.Row {
+                    Button.ListItem {
                         title: "hdmi"
                         meta: "monitor"
                         checkable: true
@@ -177,7 +187,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Button.Row · actions (click or Enter) · an icon, meta, a second line"
+                text: "Button.ListItem · actions (click or Enter) · an icon, meta, a second line"
                 size: "label"
                 muted: true
             }
@@ -185,25 +195,71 @@ Rectangle {
                 width: 380
                 Column {
                     width: parent.width
-                    Button.Row {
+                    Button.ListItem {
                         icon: "≋"
                         title: "home"
                         meta: "92% · connected"
                         onClicked: console.log("open: home")
                     }
-                    Button.Row {
+                    Button.ListItem {
                         icon: "≋"
                         title: "office-5g"
                         meta: "64%"
                         onClicked: console.log("open: office-5g")
                     }
-                    Button.Row {
+                    Button.ListItem {
                         icon: "▣"
                         title: "zen browser"
                         description: "web browser"
                         meta: "↵"
                         onClicked: console.log("launch: zen")
                     }
+                }
+            }
+
+            // ---- Button.Tile: a box in a grid ----
+            Text.Mono {
+                text: "Button.Tile · on/off (click or Space) or an action (click or Enter)"
+                size: "label"
+                muted: true
+            }
+            Grid {
+                columns: 3
+                spacing: Spacing.inner
+
+                Button.Tile {
+                    width: 190
+                    icon: "☾"
+                    title: "night light"
+                    description: gallery.night_light ? "on" : "off"
+                    checkable: true
+                    checked: gallery.night_light
+                    onClicked: gallery.night_light = !gallery.night_light
+                }
+                Button.Tile {
+                    width: 190
+                    icon: "☕"
+                    title: "stay awake"
+                    description: gallery.stay_awake ? "on" : "off"
+                    checkable: true
+                    checked: gallery.stay_awake
+                    onClicked: gallery.stay_awake = !gallery.stay_awake
+                }
+                Button.Tile {
+                    width: 190
+                    icon: "⌁"
+                    title: "bluetooth"
+                    description: "no adapter"
+                    checkable: true
+                    enabled: false
+                }
+                Button.Tile {
+                    width: 190
+                    icon: "▦"
+                    title: "dashboard"
+                    description: "super + i"
+                    meta: "→"
+                    onClicked: console.log("dashboard")
                 }
             }
 
