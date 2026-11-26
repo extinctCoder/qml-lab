@@ -5,7 +5,7 @@ import components.ui.text as Text
 import components.ui.button as Button
 
 // The storybook: the button family (Basic and Toggle), the text family (Mono and Header),
-// and Surface, our look for any box.
+// and Surface, our look for any box. Everything with a box gets it from Surface.
 // It scrolls (wheel, trackpad, or by dragging), and follows the keyboard focus.
 Rectangle {
     id: gallery
@@ -171,6 +171,60 @@ Rectangle {
                 description_size: "body"
             }
 
+            Text.Mono {
+                text: "Header · surface · icon_outline · both: any header becomes a card"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+
+                Text.Header {
+                    icon: "≋"
+                    title: "wi-fi"
+                    description: "home network · 92%"
+                    surface: true
+                }
+                Text.Header {
+                    icon: "≋"
+                    title: "wi-fi"
+                    description: "home network · 92%"
+                    icon_outline: true
+                }
+                Text.Header {
+                    icon: "≋"
+                    title: "wi-fi"
+                    description: "home network · 92%"
+                    surface: true
+                    icon_outline: true
+                }
+            }
+
+            Text.Header {
+                icon: "♪"
+                title: "Back in Black"
+                description: "AC/DC · 1980"
+                title_size: "display"
+                description_size: "body"
+                surface: true
+                icon_outline: true
+            }
+
+            Text.Mono {
+                text: "Mono · surface: true · long text wraps when it has a width"
+                size: "label"
+                muted: true
+            }
+            Text.Mono {
+                text: "a short boxed text"
+                surface: true
+            }
+            Text.Mono {
+                width: 320
+                surface: true
+                text: "Night light lowers blue light after sunset. It follows your location's sunset time and fades in over 30 minutes."
+            }
+
             // ---- Surface: our look for any box ----
             Text.Mono {
                 text: "Surface · holds anything · outlined, filled, ghost"
@@ -200,6 +254,50 @@ Rectangle {
                 }
             }
 
+            Text.Mono {
+                text: "Surface · level 1 (deepest) to 5 (front) · the default is 3"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.inner
+
+                Surface {
+                    level: 1
+                    Text.Mono {
+                        text: "1"
+                    }
+                }
+                Surface {
+                    level: 2
+                    Text.Mono {
+                        text: "2"
+                    }
+                }
+                Surface {
+                    Text.Mono {
+                        text: "3 default"
+                    }
+                }
+                Surface {
+                    level: 4
+                    Text.Mono {
+                        text: "4"
+                    }
+                }
+                Surface {
+                    level: 5
+                    Text.Mono {
+                        text: "5"
+                    }
+                }
+            }
+
+            Text.Mono {
+                text: "Surface · holding a Column: a header and a line"
+                size: "label"
+                muted: true
+            }
             Surface {
                 Column {
                     spacing: Spacing.tight

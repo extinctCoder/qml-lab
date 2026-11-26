@@ -42,20 +42,24 @@ Surface {
         })[variant]
     readonly property bool selected: checkable && checked
 
+    readonly property color disabled_container: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled_container)
+    readonly property color disabled_content: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled)
+    readonly property bool has_fill: look.fill !== "transparent"
+    readonly property bool has_line: look.line !== "none"
+
     padding_x: Spacing.gap
     padding_y: Spacing.tight
 
-    color: selected ? Colors.secondary_container : look.fill
-    border.width: selected || look.line !== "none" ? Shape.border : 0
-    border.color: selected ? Colors.primary : look.line === "none" ? "transparent" : look.line
-    opacity: enabled ? 1 : States.disabled
+    color: !enabled ? (has_fill || selected ? disabled_container : "transparent") : selected ? Colors.secondary_container : look.fill
+    border.width: selected || has_line ? Shape.border : 0
+    border.color: !enabled ? disabled_container : selected ? Colors.primary : has_line ? look.line : "transparent"
 
     Mono {
         id: label
         anchors.centerIn: parent
         text: root.text
         size: "label"
-        color: root.selected ? Colors.on_secondary_container : root.look.label
+        color: !root.enabled ? root.disabled_content : root.selected ? Colors.on_secondary_container : root.look.label
     }
 
     Interactive {

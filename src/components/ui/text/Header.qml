@@ -1,47 +1,56 @@
 import QtQuick
 import theme
+import components.ui
 
-Item {
+Surface {
     id: root
 
     property string icon: ""
-    property string title: ""
+    required property string title
     property string description: ""
     property string title_size: "title"
     property string description_size: "label"
+    property bool surface: false
+    property bool icon_outline: false
 
     readonly property bool has_icon: icon !== ""
 
-    implicitWidth: (has_icon ? icon_box.width + Spacing.inner : 0) + text_block.implicitWidth
-    implicitHeight: text_block.implicitHeight
+    appearance: surface ? "outlined" : "none"
 
     Item {
-        id: icon_box
-        visible: root.has_icon
-        width: text_block.implicitHeight
-        height: text_block.implicitHeight
+        implicitWidth: (root.has_icon ? icon_box.width + Spacing.inner : 0) + text_block.implicitWidth
+        implicitHeight: text_block.implicitHeight
 
-        Mono {
-            anchors.centerIn: parent
-            text: root.icon
-            font.pixelSize: parent.height * 0.8
-            color: Colors.primary
+        Surface {
+            id: icon_box
+            visible: root.has_icon
+            width: text_block.implicitHeight
+            height: text_block.implicitHeight
+            appearance: root.icon_outline ? "outlined" : "none"
+            level: 4
+
+            Mono {
+                anchors.centerIn: parent
+                text: root.icon
+                font.pixelSize: icon_box.height * (root.icon_outline ? 0.6 : 0.8)   // a little smaller inside a frame
+                color: Colors.primary
+            }
         }
-    }
 
-    Column {
-        id: text_block
-        x: root.has_icon ? icon_box.width + Spacing.inner : 0
+        Column {
+            id: text_block
+            x: root.has_icon ? icon_box.width + Spacing.inner : 0
 
-        Mono {
-            text: root.title
-            size: root.title_size
-        }
-        Mono {
-            visible: root.description !== ""
-            text: root.description
-            size: root.description_size
-            muted: true
+            Mono {
+                text: root.title
+                size: root.title_size
+            }
+            Mono {
+                visible: root.description !== ""
+                text: root.description
+                size: root.description_size
+                muted: true
+            }
         }
     }
 }
