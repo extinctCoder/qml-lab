@@ -3,3 +3,5 @@ module components.ui.feedback
 internal Base Base.qml
 
 Empty Empty.qml
+Loading Loading.qml
+Error Error.qml
