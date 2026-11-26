@@ -1,7 +1,7 @@
 import QtQuick
 import theme
-import components.ui.text
-import components.ui.mark
+import components.ui.text as Text
+import components.ui.mark as Mark
 
 Item {
     id: root
@@ -25,13 +25,13 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Spacing.inner
 
-        ChoiceMark {
+        Mark.Choice {
             visible: root.mark !== ""
             anchors.verticalCenter: parent.verticalCenter
             kind: root.mark
             on: root.marked
         }
-        Header {
+        Text.Header {
             anchors.verticalCenter: parent.verticalCenter
             icon: root.icon
             title: root.title
@@ -40,7 +40,7 @@ Item {
         }
     }
 
-    SwitchMark {
+    Mark.Switch {
         id: switch_mark
         visible: root.show_switch
         on: root.switch_on
@@ -48,7 +48,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
     }
 
-    Mono {
+    Text.Mono {
         id: meta_text
         visible: root.meta !== "" && !root.show_switch
         anchors.right: parent.right

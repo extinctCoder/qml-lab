@@ -1,7 +1,7 @@
 import QtQuick
 import theme
-import components.ui.text
-import components.ui.mark
+import components.ui.text as Text
+import components.ui.mark as Mark
 import components.ui.button as Button
 
 Item {
@@ -36,26 +36,26 @@ Item {
             width: Type.title * 1.6
             height: Type.title * 1.6 + Spacing.tight
 
-            Mono {
+            Text.Mono {
                 visible: !root.busy
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: root.icon
                 font.pixelSize: Type.title * 1.6
                 color: root.tone
             }
-            SpinnerMark {
+            Mark.Spinner {
                 visible: root.busy
                 anchors.horizontalCenter: parent.horizontalCenter
                 size: Type.title * 1.4
                 color: root.tone
             }
         }
-        Mono {
+        Text.Mono {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
             text: root.title
         }
-        Mono {
+        Text.Mono {
             visible: root.description !== ""
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
@@ -63,7 +63,7 @@ Item {
             size: "label"
             muted: true
         }
-        Mono {
+        Text.Mono {
             visible: root.details !== ""
             width: parent.width
             text: root.details
@@ -113,18 +113,18 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             spacing: Spacing.inner
 
-            Mono {
+            Text.Mono {
                 visible: !root.busy && root.icon !== ""
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.icon
                 color: root.tone
             }
-            SpinnerMark {
+            Mark.Spinner {
                 visible: root.busy
                 anchors.verticalCenter: parent.verticalCenter
                 color: root.tone
             }
-            Mono {
+            Text.Mono {
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.title
                 color: root.tone

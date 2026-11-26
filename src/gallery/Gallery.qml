@@ -260,25 +260,25 @@ Rectangle {
                 spacing: Spacing.edge
                 property bool flipped: false
 
-                Mark.SwitchMark {
+                Mark.Switch {
                     on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
-                Mark.ChoiceMark {
+                Mark.Choice {
                     kind: "radio"
                     on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
-                Mark.ChoiceMark {
+                Mark.Choice {
                     kind: "check"
                     on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
-                Mark.ChevronMark {
+                Mark.Chevron {
                     open: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
-                Mark.SpinnerMark {
+                Mark.Spinner {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text.Mono {

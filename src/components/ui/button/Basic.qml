@@ -1,6 +1,6 @@
 import QtQuick
 import theme
-import components.ui.text
+import components.ui.text as Text
 
 Base {
     id: root
@@ -46,7 +46,7 @@ Base {
     border.color: !enabled ? disabled_container : selected ? Colors.primary : has_line ? look.line : "transparent"
     tint: label.color
 
-    Mono {
+    Text.Mono {
         id: label
         anchors.centerIn: parent
         text: root.text

@@ -1,4 +1,6 @@
 module components.ui.text
 
+internal Base Base.qml
+
 Mono Mono.qml
 Header Header.qml

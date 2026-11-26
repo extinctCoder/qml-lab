@@ -1,7 +1,7 @@
 import QtQuick
 import theme
-import components.ui.text
-import components.ui.mark
+import components.ui.text as Text
+import components.ui.mark as Mark
 import components.behaviors
 
 Base {
@@ -27,7 +27,7 @@ Base {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: Shape.border
-                z: -2
+                z: -2                                   // behind the click area, so its hover tint shows
                 color: root.enabled && root.selected ? Colors.secondary_container : "transparent"
                 radius: Shape.radius
 
@@ -39,7 +39,7 @@ Base {
                 }
             }
 
-            Header {
+            Text.Header {
                 id: header
                 x: Spacing.inner
                 anchors.verticalCenter: parent.verticalCenter
@@ -57,7 +57,7 @@ Base {
                 width: root.checkable ? switch_mark.implicitWidth : 0
                 height: switch_mark.implicitHeight
 
-                SwitchMark {
+                Mark.Switch {
                     id: switch_mark
                     on: root.checked
                 }
@@ -77,16 +77,16 @@ Base {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: Spacing.inner
 
-                Mono {
+                Text.Mono {
                     visible: root.meta !== ""
                     anchors.verticalCenter: parent.verticalCenter
                     text: root.meta
                     size: "label"
                     muted: true
                 }
-                ChevronMark {
+                Mark.Chevron {
                     anchors.verticalCenter: parent.verticalCenter
-                    open: root.open
+                    on: root.open
                 }
             }
 
