@@ -17,8 +17,8 @@ Base {
     color: enabled && selected ? Colors.secondary_container : "transparent"
 
     ItemContent {
-        mark: !root.checkable ? "" : root.mark === "check" ? (root.checked ? "■" : "□") : (root.checked ? "●" : "○")
-        marked: root.selected
+        mark: root.checkable ? root.mark : ""
+        marked: root.checked
         icon: root.icon
         title: root.title
         description: root.description

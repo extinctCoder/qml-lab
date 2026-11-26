@@ -3,6 +3,7 @@ module components.ui.button
 internal Base Base.qml
 internal ItemContent ItemContent.qml
 internal SwitchMark SwitchMark.qml
+internal ChoiceMark ChoiceMark.qml
 
 Basic Basic.qml
 ListItem ListItem.qml
