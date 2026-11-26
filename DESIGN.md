@@ -110,6 +110,28 @@ A 4 px grid, four steps:
 | ghost   | text            | the lowest priority; the default in toolbars and lists: _cancel_ | label `primary`, no fill                                |
 | danger  | (Carbon)        | destructive actions only: _delete_                               | `error` roles; outline, or filled to confirm            |
 
+## Cards
+
+A card is one topic. Five independent choices:
+
+| Choice | Options |
+|---|---|
+| layer | panel, card, popup (see Layers) |
+| appearance | outlined (default), filled (no border), ghost (no border, no fill) |
+| title | inside, in a header (icon, title, description, meta) · or in the border, TUI style (title top-left, status bottom-right) |
+| behavior | static, clickable, selectable (single or multi), expandable |
+| density | default, compact |
+
+Rules:
+1. One topic per card. (Material 3)
+2. Interactive cards always keep a visible border, so they look operable. (Carbon)
+3. One primary target: a clickable card is clicked anywhere. (accessibility guidance)
+4. At most one or two actions inside an interactive card. (Carbon)
+5. Clickable cards don't color text like links; an arrow (→) means "opens something". (Carbon)
+6. Keys: Enter opens, Space toggles or expands. (Carbon)
+7. Selection never relies on color alone: ■ □ multi-select, ● ○ single-select. (Carbon)
+
+
 ## States (every interactive component)
 
 | State          | Look                                |

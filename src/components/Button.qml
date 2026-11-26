@@ -42,14 +42,21 @@ Rectangle {
     color: look.fill
     border.width: look.line === "none" ? 0 : Shape.border
     border.color: look.line === "none" ? "transparent" : look.line
-    opacity: enabled ? 1 : 0.38
+    opacity: enabled ? 1 : States.disabled
     activeFocusOnTab: true
 
     Rectangle {
         anchors.fill: parent
         radius: Shape.radius
         color: root.look.label
-        opacity: tap.pressed ? 0.10 : hover.hovered ? 0.08 : 0
+        opacity: tap.pressed ? States.pressed : hover.hovered ? States.hover : 0
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Motion.small
+                easing.type: Motion.ease_out
+            }
+        }
     }
 
     Rectangle {
@@ -59,7 +66,14 @@ Rectangle {
         color: "transparent"
         border.width: Shape.focus
         border.color: Colors.primary
-        visible: root.activeFocus
+        opacity: root.activeFocus ? 1 : 0
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Motion.small
+                easing.type: Motion.ease_out
+            }
+        }
     }
 
     Mono {

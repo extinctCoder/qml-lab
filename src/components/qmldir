@@ -1,3 +1,4 @@
 module components
 Mono Mono.qml
 Button Button.qml
+Card Card.qml
