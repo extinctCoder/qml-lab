@@ -10,6 +10,8 @@ Item {
     property real from: 0
     property real to: 100
     property string icon: ""
+    property string title: ""
+    property int title_width: 0
     property string label: ""
     property color tone: Colors.primary
     property alias track: track
@@ -17,7 +19,7 @@ Item {
     readonly property real ratio: to > from ? Math.max(0, Math.min(1, (value - from) / (to - from))) : 0
 
     implicitWidth: 200
-    implicitHeight: Math.max(icon_text.implicitHeight, label_text.implicitHeight, 10)
+    implicitHeight: Math.max(icon_text.implicitHeight, title_text.implicitHeight, label_text.implicitHeight, 10) + Spacing.tight * 2
 
     Row {
         anchors.fill: parent
@@ -31,10 +33,20 @@ Item {
             tone: Colors.primary
         }
 
+        Text.Mono {
+            id: title_text
+            visible: root.title !== ""
+            anchors.verticalCenter: parent.verticalCenter
+            width: root.title_width > 0 ? root.title_width : implicitWidth
+            text: root.title
+            maximumLineCount: 1
+            elide: Qt.ElideRight
+        }
+
         Rectangle {
             id: track
             anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - (icon_text.visible ? icon_text.width + parent.spacing : 0) - (label_text.visible ? label_text.width + parent.spacing : 0)
+            width: parent.width - (icon_text.visible ? icon_text.width + parent.spacing : 0) - (title_text.visible ? title_text.width + parent.spacing : 0) - (label_text.visible ? label_text.width + parent.spacing : 0)
             height: 10
             radius: Shape.radius
             color: Colors.surface_container_highest
