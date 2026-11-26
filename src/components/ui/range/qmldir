@@ -1,0 +1,6 @@
+module components.ui.range
+
+internal Base Base.qml
+
+Basic Basic.qml
+Slider Slider.qml
