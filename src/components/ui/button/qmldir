@@ -2,7 +2,7 @@ module components.ui.button
 
 internal Base Base.qml
 internal ItemContent ItemContent.qml
-internal SwitchmMark SwitchmMark.qml
+internal SwitchMark SwitchMark.qml
 
 Basic Basic.qml
 ListItem ListItem.qml
