@@ -11,10 +11,7 @@ Surface {
     property color tint: Colors.on_surface
     signal clicked
 
-    readonly property bool selected: checkable && checked
-
-    readonly property color disabled_container: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled_container)
-    readonly property color disabled_content: Qt.rgba(Colors.on_surface.r, Colors.on_surface.g, Colors.on_surface.b, States.disabled)
+    selected: checkable && checked                  // Surface draws the selected look
 
     Interactive {
         parent: root

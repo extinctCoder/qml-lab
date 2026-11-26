@@ -35,15 +35,14 @@ Base {
                 line: Colors.error
             }
         })[variant]
-    readonly property bool has_fill: look.fill !== "transparent"
     readonly property bool has_line: look.line !== "none"
 
     padding_x: Spacing.gap
     padding_y: Spacing.tight
-
-    color: !enabled ? (has_fill || selected ? disabled_container : "transparent") : selected ? Colors.secondary_container : look.fill
-    border.width: selected || has_line ? Shape.border : 0
-    border.color: !enabled ? disabled_container : selected ? Colors.primary : has_line ? look.line : "transparent"
+    // the variant's resting look; Surface turns it gray when disabled, tonal when selected
+    appearance: variant === "ghost" ? "ghost" : has_line ? "outlined" : "filled"
+    fill: look.fill
+    line: has_line ? look.line : Colors.outline_variant
     tint: label.color
 
     Text.Mono {

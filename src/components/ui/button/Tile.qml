@@ -12,8 +12,6 @@ Base {
     padding_x: Spacing.inner
     padding_y: Spacing.inner
     appearance: "outlined"
-    color: enabled && selected ? Colors.secondary_container : level_color
-    border.color: enabled && selected ? Colors.primary : Colors.outline_variant
 
     ItemContent {
         show_switch: root.checkable

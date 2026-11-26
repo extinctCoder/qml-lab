@@ -14,7 +14,6 @@ Base {
     padding_x: Spacing.inner
     padding_y: Spacing.tight
     appearance: "ghost"
-    color: enabled && selected ? Colors.secondary_container : "transparent"
 
     ItemContent {
         mark: root.checkable ? root.mark : ""

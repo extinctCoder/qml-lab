@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.behaviors
 
 Base {
     id: root
@@ -12,10 +13,7 @@ Base {
     rotation: on ? 90 : 0
 
     Behavior on rotation {
-        NumberAnimation {
-            duration: Motion.small
-            easing.type: Motion.ease_out
-        }
+        Glide {}
     }
 
     Canvas {

@@ -31,10 +31,7 @@ Item {
         opacity: root.pressed ? States.pressed : root.hovered ? States.hover : 0
 
         Behavior on opacity {
-            NumberAnimation {
-                duration: Motion.small
-                easing.type: Motion.ease_out
-            }
+            Glide {}
         }
     }
 
@@ -48,10 +45,7 @@ Item {
         opacity: root.activeFocus ? 1 : 0
 
         Behavior on opacity {
-            NumberAnimation {
-                duration: Motion.small
-                easing.type: Motion.ease_out
-            }
+            Glide {}
         }
     }
 

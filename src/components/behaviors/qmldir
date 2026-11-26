@@ -1,2 +1,5 @@
 module components.behaviors
+
 Interactive Interactive.qml
+Glide Glide.qml
+ColorGlide ColorGlide.qml

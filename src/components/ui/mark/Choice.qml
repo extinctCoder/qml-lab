@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.behaviors
 
 Base {
     id: root
@@ -18,10 +19,7 @@ Base {
         border.color: root.tone
 
         Behavior on border.color {
-            ColorAnimation {
-                duration: Motion.small
-                easing.type: Motion.ease_out
-            }
+            ColorGlide {}
         }
 
         Rectangle {
@@ -33,16 +31,10 @@ Base {
             color: root.on_color
 
             Behavior on width {
-                NumberAnimation {
-                    duration: Motion.small
-                    easing.type: Motion.ease_out
-                }
+                Glide {}
             }
             Behavior on height {
-                NumberAnimation {
-                    duration: Motion.small
-                    easing.type: Motion.ease_out
-                }
+                Glide {}
             }
         }
     }

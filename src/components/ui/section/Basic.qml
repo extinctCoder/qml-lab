@@ -15,8 +15,8 @@ Base {
     property bool checked: false
     signal switched
 
-    readonly property bool selected: checkable && checked
-    border.color: enabled && selected ? Colors.primary : Colors.outline_variant
+    readonly property bool active: checkable && checked
+    line: active ? Colors.primary : Colors.outline_variant
 
     header_items: [
         Item {
@@ -28,14 +28,11 @@ Base {
                 anchors.fill: parent
                 anchors.margins: Shape.border
                 z: -2                                   // behind the click area, so its hover tint shows
-                color: root.enabled && root.selected ? Colors.secondary_container : "transparent"
+                color: root.enabled && root.active ? Colors.secondary_container : "transparent"
                 radius: Shape.radius
 
                 Behavior on color {
-                    ColorAnimation {
-                        duration: Motion.small
-                        easing.type: Motion.ease_out
-                    }
+                    ColorGlide {}
                 }
             }
 

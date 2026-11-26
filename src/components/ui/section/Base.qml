@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.behaviors
 import components.ui
 
 Surface {
@@ -42,7 +43,7 @@ Surface {
             clip: true
 
             Behavior on height {
-                NumberAnimation {
+                Glide {
                     duration: root.open ? Motion.open : Motion.close
                     easing.type: root.open ? Motion.ease_out : Motion.ease_in
                 }
