@@ -16,6 +16,8 @@ FocusScope {
     property string error: ""
     property bool secret: false
     property Roving list: null
+    property Highlight highlight: null
+    property bool esc_leaves: true
     default property alias trailing: trailing_row.data
     readonly property alias input: editor
     signal edited(string text)
@@ -112,9 +114,15 @@ FocusScope {
                         if (text !== "") {
                             text = "";
                             root.edited("");
-                        } else {
+                        } else if (root.esc_leaves) {
                             focus = false;
+                        } else {
+                            event.accepted = false;
                         }
+                    }
+                    Keys.onPressed: event => {
+                        if (root.highlight && root.highlight.handle(event))
+                            event.accepted = true;
                     }
                     Keys.onDownPressed: event => {
                         if (!root.list || !root.list.enter())

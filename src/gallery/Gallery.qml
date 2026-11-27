@@ -11,6 +11,7 @@ import components.ui.feedback as Feedback
 import components.ui.range as Range
 import components.ui.tabs as Tabs
 import components.ui.field as Field
+import components.ui.picker as Picker
 import components.behaviors
 
 Rectangle {
@@ -37,14 +38,21 @@ Rectangle {
     property string query: "ze"
     property string password: "correct horse"
     property string launched: ""
+    property string layout: ""
+    property string action: ""
     readonly property var apps: [
-        { name: "zen browser", kind: "web browser" },
-        { name: "zed", kind: "editor" },
-        { name: "ghostty", kind: "terminal" },
-        { name: "spotify", kind: "music" },
-        { name: "thunar", kind: "files" }
+        { icon: "▣", title: "zen browser", description: "web browser" },
+        { icon: "▣", title: "zed", description: "editor" },
+        { icon: "▣", title: "ghostty", description: "terminal" },
+        { icon: "▣", title: "spotify", description: "music" },
+        { icon: "▣", title: "thunar", description: "files" },
+        { icon: "▣", title: "gnome-system-monitor", description: "system" },
+        { icon: "▣", title: "obs studio", description: "recording" },
+        { icon: "▣", title: "steam", description: "games" },
+        { icon: "▣", title: "settings", description: "system" },
+        { icon: "▣", title: "VisualStudioCode", description: "editor" },
+        { icon: "▣", title: "libreoffice-calc", description: "spreadsheets" }
     ]
-    readonly property var matches: apps.filter(a => a.name.indexOf(query.trim().toLowerCase()) >= 0)
 
     Flickable {
         id: scroller
@@ -989,61 +997,15 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Search · × clears · ↓ moves into the results, ↑ from the first comes back · Enter launches the first"
+                text: "Search · a field with a search icon · × clears · for a list to pick from, see 10 · Picker"
                 size: "label"
                 muted: true
             }
-            Column {
+            Field.Search {
                 width: 420
-                spacing: Spacing.tight
-                Field.Search {
-                    id: search
-                    width: parent.width
-                    text: gallery.query
-                    placeholder: "search apps…"
-                    label: gallery.matches.length + (gallery.matches.length === 1 ? " result" : " results")
-                    list: results
-                    onEdited: text => gallery.query = text
-                    onSubmitted: if (gallery.matches.length > 0)
-                        gallery.launched = gallery.matches[0].name
-                }
-                Surface {
-                    width: parent.width
-                    padding_x: 0
-                    padding_y: Spacing.tight
-                    Column {
-                        width: parent.width
-                        Roving {
-                            id: results
-                            orientation: "column"
-                            selects: false
-                            entry: search
-                        }
-                        Repeater {
-                            model: gallery.matches
-                            Button.ListItem {
-                                required property var modelData
-                                icon: "▣"
-                                title: modelData.name
-                                description: modelData.kind
-                                roving: results
-                                onClicked: gallery.launched = modelData.name
-                            }
-                        }
-                        Feedback.Empty {
-                            visible: gallery.matches.length === 0
-                            compact: true
-                            icon: "⌕"
-                            title: "no apps match"
-                        }
-                    }
-                }
-                Text.Mono {
-                    visible: gallery.launched !== ""
-                    text: "launched: " + gallery.launched
-                    size: "label"
-                    muted: true
-                }
+                text: gallery.query
+                placeholder: "filter…"
+                onEdited: text => gallery.query = text
             }
 
             Text.Mono {
@@ -1086,6 +1048,81 @@ Rectangle {
                     text: "home"
                     enabled: false
                 }
+            }
+
+            Text.Mono {
+                text: "10 · Picker"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Palette · fzf-style: try gst · sm · vsc · ↑ ↓ (or ctrl+n/p) move while you type · Enter picks"
+                size: "label"
+                muted: true
+            }
+            Picker.Palette {
+                width: 420
+                options: gallery.apps
+                placeholder: "search apps…"
+                onPicked: option => gallery.launched = option.title
+            }
+            Text.Mono {
+                visible: gallery.launched !== ""
+                text: "launched: " + gallery.launched
+                size: "label"
+                muted: true
+            }
+
+            Text.Mono {
+                text: "Select · opens on the current value · Space or click · ↑ ↓ Enter · Esc · the second one has a filter"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Picker.Select {
+                    width: 180
+                    current: gallery.power
+                    options: [{ title: "eco" }, { title: "balanced" }, { title: "performance" }]
+                    onPicked: option => gallery.power = option.title
+                }
+                Picker.Select {
+                    width: 220
+                    searchable: true
+                    placeholder: "keyboard layout"
+                    current: gallery.layout
+                    options: [{ title: "english (us)" }, { title: "english (uk)" }, { title: "bangla" }, { title: "german" }, { title: "french" }, { title: "japanese" }, { title: "spanish" }, { title: "arabic" }]
+                    onPicked: option => gallery.layout = option.title
+                }
+            }
+
+            Text.Mono {
+                text: "Menu · a popup list · typing jumps to a match · Home · End · Esc closes"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Button.Basic {
+                    id: more
+                    text: "⋯ actions"
+                    variant: "outline"
+                    onClicked: actions.show(more)
+                }
+                Text.Mono {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: gallery.action !== ""
+                    text: "picked: " + gallery.action
+                    size: "label"
+                    muted: true
+                }
+            }
+            Picker.Menu {
+                id: actions
+                anchor: more
+                options: [{ title: "copy", meta: "ctrl c" }, { title: "rename", meta: "f2" }, { title: "move to trash", meta: "del" }, { title: "properties" }]
+                onPicked: option => gallery.action = option.title
             }
         }
     }

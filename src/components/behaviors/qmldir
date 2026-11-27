@@ -4,3 +4,6 @@ Interactive Interactive.qml
 Glide Glide.qml
 ColorGlide ColorGlide.qml
 Roving Roving.qml
+Highlight Highlight.qml
+Popup Popup.qml
+Fuzzy fuzzy.js

@@ -11,12 +11,14 @@ Item {
     property var keys: checkable ? ["space"] : ["enter", "space"]
     property Item exclude: null
     property Roving roving: null
+    property bool highlighted: false
+    property bool focusable: true
     readonly property bool hovered: hover.hovered
     readonly property bool pressed: tap.pressed && !tap.on_excluded
 
     signal activated
 
-    activeFocusOnTab: roving ? roving.stop === root || activeFocus : true
+    activeFocusOnTab: roving ? roving.stop === root || activeFocus : focusable
 
     Component.onCompleted: if (roving)
         roving.join(root)
@@ -39,7 +41,7 @@ Item {
         anchors.fill: parent
         radius: root.radius
         color: root.tint
-        opacity: root.pressed ? States.pressed : root.hovered ? States.hover : 0
+        opacity: root.pressed ? States.pressed : root.hovered || root.highlighted ? States.hover : 0
 
         Behavior on opacity {
             Glide {}

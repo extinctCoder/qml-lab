@@ -10,17 +10,24 @@ Surface {
     property bool checked: false
     property color tint: Colors.on_surface
     property Roving roving: null
+    property bool highlighted: false
+    property bool focusable: true
+    readonly property bool hovered: interactive.hovered
+    readonly property Item focus_target: interactive
     signal clicked
 
     selected: checkable && checked
 
     Interactive {
+        id: interactive
         parent: root
         anchors.fill: parent
         checkable: root.checkable
         checked: root.checked
         tint: root.tint
         roving: root.roving
+        highlighted: root.highlighted
+        focusable: root.focusable
         onActivated: root.clicked()
     }
 }
