@@ -5,3 +5,4 @@ internal Base Base.qml
 Tag Tag.qml
 Count Count.qml
 Dot Dot.qml
+Chip Chip.qml

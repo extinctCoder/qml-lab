@@ -1,0 +1,5 @@
+module components.ui.dialog
+
+internal Base Base.qml
+
+Confirm Confirm.qml

@@ -5,3 +5,4 @@ internal Base Base.qml
 Basic Basic.qml
 Search Search.qml
 Password Password.qml
+Stepper Stepper.qml

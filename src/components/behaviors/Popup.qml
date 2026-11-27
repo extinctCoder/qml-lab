@@ -1,32 +1,14 @@
 import QtQuick
 import theme
 
-FocusScope {
+Overlay {
     id: root
 
-    property Item anchor: null
-    property bool opened: false
-    property Item opener: null
     default property alias content: holder.data
-    signal closed
 
-    readonly property Item overlay: anchor ? anchor.Window.contentItem : null
-
-    function open(from) {
-        const source = from ? from : anchor;
-        opener = source && source.focus_target ? source.focus_target : source;
-        opened = true;
+    onOpenedChanged: if (opened) {
         place();
         holder.forceActiveFocus();
-    }
-
-    function close() {
-        if (!opened)
-            return;
-        opened = false;
-        if (opener)
-            opener.forceActiveFocus();
-        closed();
     }
 
     property Item last_inside: null
@@ -76,10 +58,7 @@ FocusScope {
         holder.x = Math.max(Spacing.tight, Math.min(p.x, overlay.width - holder.implicitWidth - Spacing.tight));
     }
 
-    parent: overlay
-    anchors.fill: parent
     visible: opened || fade.running
-    z: 1000
 
     MouseArea {
         anchors.fill: parent
@@ -114,15 +93,14 @@ FocusScope {
             root.place()
 
         Behavior on opacity {
-            NumberAnimation {
+            Swing {
                 id: fade
-                duration: root.opened ? Motion.open : Motion.close
-                easing.type: root.opened ? Motion.ease_out : Motion.ease_in
+                opened: root.opened
             }
         }
         Behavior on scale {
-            Glide {
-                duration: root.opened ? Motion.open : Motion.close
+            Swing {
+                opened: root.opened
             }
         }
 

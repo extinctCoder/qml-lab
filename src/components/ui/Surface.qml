@@ -14,27 +14,16 @@ Rectangle {
     property int padding_y: Spacing.inner
     default property alias content: area.data
 
-    readonly property color level_color: [
-        Colors.surface_container_lowest,
-        Colors.surface_container_low,
-        Colors.surface_container,
-        Colors.surface_container_high,
-        Colors.surface_container_highest
-    ][Math.max(1, Math.min(5, level)) - 1]
+    readonly property color level_color: [Colors.surface_container_lowest, Colors.surface_container_low, Colors.surface_container, Colors.surface_container_high, Colors.surface_container_highest][Math.max(1, Math.min(5, level)) - 1]
 
     readonly property bool shows_fill: (appearance === "outlined" || appearance === "filled") && fill.a > 0
 
     readonly property int pad_x: appearance === "none" ? 0 : padding_x
     readonly property int pad_y: appearance === "none" ? 0 : padding_y
 
-    color: !enabled ? (shows_fill || selected ? States.disabled_fill : "transparent")
-        : selected ? Colors.secondary_container
-        : shows_fill ? fill : "transparent"
+    color: !enabled ? (shows_fill || selected ? States.disabled_fill : "transparent") : selected ? Colors.secondary_container : shows_fill ? fill : "transparent"
     border.width: emphasis !== "none" ? Shape.focus : appearance === "outlined" ? Shape.border : 0
-    border.color: !enabled ? States.disabled_fill
-        : emphasis === "error" ? Colors.error
-        : emphasis === "focus" || selected ? Colors.primary
-        : line
+    border.color: !enabled ? States.disabled_fill : emphasis === "error" ? Colors.error : emphasis === "focus" || selected ? Colors.primary : line
     radius: Shape.radius
 
     implicitWidth: area.children.reduce((w, c) => c.visible ? Math.max(w, c.implicitWidth) : w, 0) + pad_x * 2

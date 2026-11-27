@@ -5,3 +5,4 @@ internal Base Base.qml
 Spark Spark.qml
 Columns Columns.qml
 Lines Lines.qml
+Spectrum Spectrum.qml

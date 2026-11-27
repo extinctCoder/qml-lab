@@ -1,6 +1,7 @@
 import QtQuick
 import theme
 import components.ui
+import components.behaviors
 
 Item {
     id: root
@@ -61,16 +62,12 @@ Item {
         title_width: root.title_width
         label: root.label
 
-        Canvas {
+        Drawn {
             id: canvas
             width: parent.width
             height: root.plot_height
+            painter: root.draw
             onWidthChanged: requestPaint()
-            onPaint: {
-                const ctx = getContext("2d");
-                ctx.reset();
-                root.draw(ctx, width, height);
-            }
         }
     }
 }

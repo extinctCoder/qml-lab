@@ -5,5 +5,12 @@ Glide Glide.qml
 ColorGlide ColorGlide.qml
 Roving Roving.qml
 Highlight Highlight.qml
+Overlay Overlay.qml
 Popup Popup.qml
+Swing Swing.qml
+Drawn Drawn.qml
+Transient Transient.qml
+Reveal Reveal.qml
+Dismissible Dismissible.qml
+WheelAdjust WheelAdjust.qml
 Fuzzy fuzzy.js

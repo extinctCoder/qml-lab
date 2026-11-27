@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.behaviors
 
 Item {
     id: root
@@ -20,14 +21,10 @@ Item {
     onToneChanged: repaint()
     onOnChanged: repaint()
 
-    Canvas {
+    Drawn {
         id: canvas
         visible: root.drawn
         anchors.fill: parent
-        onPaint: {
-            const ctx = getContext("2d");
-            ctx.reset();
-            root.draw(ctx, width, height);
-        }
+        painter: root.draw
     }
 }

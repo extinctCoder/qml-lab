@@ -14,6 +14,9 @@ import components.ui.field as Field
 import components.ui.picker as Picker
 import components.ui.badge as Badge
 import components.ui.chart as Chart
+import components.ui.image as Image
+import components.ui.keycap as Keycap
+import components.ui.dialog as Dialog
 import components.behaviors
 
 Rectangle {
@@ -49,6 +52,17 @@ Rectangle {
     property var download: Array.from({ length: 40 }, (_, i) => 50 + Math.round(Math.sin(i / 5) * 20))
     property var upload: Array.from({ length: 40 }, (_, i) => 10 + Math.round(Math.cos(i / 4) * 4))
     property int notifications: 3
+    property real stepv: 3
+    property int loop: 0
+    property bool revealed: false
+    property bool chip_music: true
+    property bool chip_photos: false
+    property bool chip_docs: false
+    property bool chip1_shown: true
+    property bool chip2_shown: true
+    property bool deleted: false
+    property bool card_gone: false
+    property var spectrum: Array.from({ length: 28 }, (_, i) => 20 + Math.round(Math.abs(Math.sin(i / 3)) * 70))
 
     function walk(list, step, low, high) {
         const last = list[list.length - 1];
@@ -67,6 +81,7 @@ Rectangle {
             gallery.history = gallery.walk(gallery.history, 10, 3, 97);
             gallery.download = gallery.walk(gallery.download, 12, 5, 95);
             gallery.upload = gallery.walk(gallery.upload, 3, 2, 30);
+            gallery.spectrum = gallery.spectrum.map(() => 10 + Math.round(Math.random() * 90));
         }
     }
     readonly property var apps: [
@@ -1297,18 +1312,424 @@ Rectangle {
                 second: gallery.upload
                 label: "↓ " + (gallery.download[gallery.download.length - 1] / 25).toFixed(1) + " MB/s"
             }
+
+            Text.Mono {
+                text: "13 · Image"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Basic (square) · Avatar (round) · a fallback glyph or initial until the source loads"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Image.Basic {
+                    width: 48
+                    height: 48
+                    fallback: "♪"
+                }
+                Image.Basic {
+                    width: 48
+                    height: 48
+                    fallback: "▣"
+                }
+                Image.Avatar {
+                    width: 48
+                    height: 48
+                    fallback: "s"
+                }
+                Image.Avatar {
+                    width: 48
+                    height: 48
+                    fallback: "k"
+                }
+            }
+
+            Text.Mono {
+                text: "14 · Keycap"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Basic · a single key · Combo · a shortcut, joined by +"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Row {
+                    spacing: Spacing.tight
+                    Keycap.Basic {
+                        text: "⌃"
+                    }
+                    Keycap.Basic {
+                        text: "esc"
+                    }
+                    Keycap.Basic {
+                        text: "↵"
+                    }
+                    Keycap.Basic {
+                        text: "a"
+                    }
+                }
+                Keycap.Combo {
+                    anchors.verticalCenter: parent.verticalCenter
+                    keys: ["super", "shift", "q"]
+                }
+            }
+
+            Text.Mono {
+                text: "15 · Stepper"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Field · Stepper · type a number, or step it: the buttons, or ↑ ↓ once focused"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Field.Stepper {
+                    width: 160
+                    value: gallery.stepv
+                    from: 0
+                    to: 10
+                    onChanged: value => gallery.stepv = value
+                }
+                Text.Mono {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "brightness steps: " + gallery.stepv
+                    size: "label"
+                    muted: true
+                }
+            }
+
+            Text.Mono {
+                text: "16 · Chip"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Chip · filters you toggle (checkable) · tokens with × to remove"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.inner
+                Badge.Chip {
+                    text: "music"
+                    icon: "♪"
+                    checkable: true
+                    checked: gallery.chip_music
+                    onClicked: gallery.chip_music = !gallery.chip_music
+                }
+                Badge.Chip {
+                    text: "photos"
+                    checkable: true
+                    checked: gallery.chip_photos
+                    onClicked: gallery.chip_photos = !gallery.chip_photos
+                }
+                Badge.Chip {
+                    text: "docs"
+                    checkable: true
+                    checked: gallery.chip_docs
+                    onClicked: gallery.chip_docs = !gallery.chip_docs
+                }
+                Badge.Chip {
+                    visible: gallery.chip1_shown
+                    text: "english (us)"
+                    removable: true
+                    onRemoved: gallery.chip1_shown = false
+                }
+                Badge.Chip {
+                    visible: gallery.chip2_shown
+                    text: "bangla"
+                    removable: true
+                    onRemoved: gallery.chip2_shown = false
+                }
+            }
+
+            Text.Mono {
+                text: "17 · Cycle"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Mark · Cycle · a 3-state marker (repeat: off → all → one) · click to advance"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Button.Mark {
+                    padding_x: Spacing.inner
+                    padding_y: Spacing.tight
+                    onClicked: gallery.loop = (gallery.loop + 1) % 3
+                    Mark.Cycle {
+                        index: gallery.loop
+                        count: 3
+                    }
+                }
+                Text.Mono {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: ["off", "all", "one"][gallery.loop]
+                    size: "label"
+                    muted: true
+                }
+            }
+
+            Text.Mono {
+                text: "18 · Spectrum"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Chart · Spectrum · a live audio equaliser, mirrored around the middle"
+                size: "label"
+                muted: true
+            }
+            Chart.Spectrum {
+                width: 420
+                title: "audio"
+                title_width: 64
+                values: gallery.spectrum
+            }
+
+            Text.Mono {
+                text: "19 · Divider & Scrollbar"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Divider · a rule between groups · Scrollbar · tracks a scrolling list"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Surface {
+                    width: 240
+                    Column {
+                        width: parent.width
+                        spacing: Spacing.inner
+                        Text.Mono {
+                            text: "display"
+                        }
+                        Divider {}
+                        Text.Mono {
+                            text: "sound"
+                        }
+                        Divider {}
+                        Text.Mono {
+                            text: "network"
+                        }
+                    }
+                }
+                Surface {
+                    width: 160
+                    padding_x: 0
+                    padding_y: 0
+                    Item {
+                        width: parent.width
+                        height: 96
+                        Flickable {
+                            id: mini
+                            anchors.fill: parent
+                            anchors.rightMargin: 6
+                            clip: true
+                            contentWidth: width
+                            contentHeight: col.height
+                            boundsBehavior: Flickable.StopAtBounds
+                            Column {
+                                id: col
+                                width: mini.width
+                                Repeater {
+                                    model: 12
+                                    delegate: Text.Mono {
+                                        required property int index
+                                        leftPadding: Spacing.inner
+                                        topPadding: Spacing.tight
+                                        bottomPadding: Spacing.tight
+                                        text: "row " + (index + 1)
+                                        size: "label"
+                                    }
+                                }
+                            }
+                        }
+                        Scrollbar {
+                            target: mini
+                        }
+                    }
+                }
+            }
+
+            Text.Mono {
+                text: "20 · Dialog"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Confirm · a modal that blocks until answered · Esc or the scrim cancels"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Button.Basic {
+                    id: del_btn
+                    text: "delete file"
+                    variant: "danger"
+                    onClicked: confirm.open(del_btn)
+                }
+                Text.Mono {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: gallery.deleted
+                    text: "deleted"
+                    size: "label"
+                    muted: true
+                }
+            }
+            Dialog.Confirm {
+                id: confirm
+                anchor: del_btn
+                title: "delete report.pdf?"
+                message: "this can't be undone"
+                confirm: "delete"
+                danger: true
+                onConfirmed: gallery.deleted = true
+            }
+
+            Text.Mono {
+                text: "21 · Behaviours"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Reveal · opens and closes in place · Transient · a toast that dismisses itself"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                spacing: Spacing.inner
+                Button.Basic {
+                    text: gallery.revealed ? "hide details" : "show details"
+                    variant: "outline"
+                    onClicked: gallery.revealed = !gallery.revealed
+                }
+                Reveal {
+                    width: 420
+                    open: gallery.revealed
+                    Surface {
+                        width: 420
+                        appearance: "ghost"
+                        Text.Mono {
+                            width: parent.width
+                            text: "night light lowers blue light after sunset. it follows your location's sunset time and fades in over 30 minutes."
+                            muted: true
+                        }
+                    }
+                }
+            }
+            Row {
+                spacing: Spacing.gap
+                Transient {
+                    id: toast
+                    duration: 1800
+                }
+                Button.Basic {
+                    text: "save"
+                    onClicked: toast.show()
+                }
+                Surface {
+                    anchors.verticalCenter: parent.verticalCenter
+                    appearance: "filled"
+                    fill: Colors.secondary_container
+                    line: Colors.secondary_container
+                    visible: toast.shown || opacity > 0
+                    opacity: toast.shown ? 1 : 0
+
+                    Behavior on opacity {
+                        Glide {}
+                    }
+
+                    Text.Mono {
+                        text: "saved ✓"
+                        size: "label"
+                        tone: Colors.on_secondary_container
+                    }
+                }
+            }
+
+            Text.Mono {
+                text: "Dismissible · drag the card past 40% to throw it away · WheelAdjust · scroll over the bar"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Dismissible {
+                    id: card
+                    width: 240
+                    height: 40
+                    visible: !gallery.card_gone
+                    onDismissed: gallery.card_gone = true
+                    Surface {
+                        width: 240
+                        height: 40
+                        appearance: "filled"
+                        fill: Colors.surface_container_high
+                        Text.Mono {
+                            anchors.centerIn: parent
+                            text: "✉ a notification · drag me →"
+                            size: "label"
+                        }
+                    }
+                }
+                Button.Basic {
+                    anchors.verticalCenter: parent.verticalCenter
+                    visible: gallery.card_gone
+                    text: "bring back"
+                    variant: "ghost"
+                    onClicked: {
+                        gallery.card_gone = false;
+                        card.reset();
+                    }
+                }
+            }
+            Item {
+                width: 420
+                height: 28
+                Range.Basic {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width
+                    icon: "♪"
+                    value: gallery.volume
+                    label: Math.round(gallery.volume) + "%"
+                }
+                WheelAdjust {
+                    anchors.fill: parent
+                    step: 5
+                    onAdjusted: delta => gallery.volume = Math.max(0, Math.min(100, gallery.volume + delta))
+                }
+            }
         }
     }
 
-    Rectangle {
-        visible: scroller.contentHeight > scroller.height
-        anchors.right: parent.right
-        anchors.rightMargin: 2
-        width: 3
-        radius: Shape.radius
-        color: Colors.outline_variant
-        y: scroller.visibleArea.yPosition * scroller.height
-        height: scroller.visibleArea.heightRatio * scroller.height
+    Scrollbar {
+        target: scroller
     }
 
     Connections {

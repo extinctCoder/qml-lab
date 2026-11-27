@@ -4,6 +4,7 @@ QtObject {
     id: root
 
     property string orientation: "row"
+    property int columns: 0
     property bool selects: true
     property var members: []
     property Item entry: null
@@ -42,6 +43,7 @@ QtObject {
     function ordered() {
         return members.slice().sort((a, b) => {
             const pa = a.mapToItem(null, 0, 0), pb = b.mapToItem(null, 0, 0);
+            // row: left-to-right; column and grid: row-major (top-to-bottom, then left-to-right)
             return orientation === "row" ? (pa.x - pb.x) || (pa.y - pb.y) : (pa.y - pb.y) || (pa.x - pb.x);
         });
     }
@@ -67,21 +69,41 @@ QtObject {
     }
 
     function handle(from, key) {
-        const back = orientation === "row" ? Qt.Key_Left : Qt.Key_Up;
-        const next = orientation === "row" ? Qt.Key_Right : Qt.Key_Down;
         let target = null;
-        if (key === next)
-            target = step(from, 1);
-        else if (key === back && entry && edge(false) === from)
-            target = entry;
-        else if (key === back)
-            target = step(from, -1);
-        else if (key === Qt.Key_Home)
-            target = edge(false);
-        else if (key === Qt.Key_End)
-            target = edge(true);
-        else
-            return false;
+        if (orientation === "grid") {
+            const span = columns > 0 ? columns : 1;
+            if (key === Qt.Key_Right)
+                target = step(from, 1);
+            else if (key === Qt.Key_Left && entry && edge(false) === from)
+                target = entry;
+            else if (key === Qt.Key_Left)
+                target = step(from, -1);
+            else if (key === Qt.Key_Down)
+                target = step(from, span);
+            else if (key === Qt.Key_Up)
+                target = step(from, -span);
+            else if (key === Qt.Key_Home)
+                target = edge(false);
+            else if (key === Qt.Key_End)
+                target = edge(true);
+            else
+                return false;
+        } else {
+            const back = orientation === "row" ? Qt.Key_Left : Qt.Key_Up;
+            const next = orientation === "row" ? Qt.Key_Right : Qt.Key_Down;
+            if (key === next)
+                target = step(from, 1);
+            else if (key === back && entry && edge(false) === from)
+                target = entry;
+            else if (key === back)
+                target = step(from, -1);
+            else if (key === Qt.Key_Home)
+                target = edge(false);
+            else if (key === Qt.Key_End)
+                target = edge(true);
+            else
+                return false;
+        }
         if (target && target === entry) {
             entry.forceActiveFocus();
         } else if (target && target !== from) {

@@ -35,25 +35,21 @@ Surface {
             visible: body_box.height > 0
         }
 
-        Item {
+        Reveal {
             id: body_box
             width: parent.width
-            height: root.open ? body.implicitHeight + Spacing.tight * 2 : 0
-            visible: height > 0
-            clip: true
+            open: root.open
 
-            Behavior on height {
-                Glide {
-                    duration: root.open ? Motion.open : Motion.close
-                    easing.type: root.open ? Motion.ease_out : Motion.ease_in
+            Item {
+                width: parent.width
+                height: body.implicitHeight + Spacing.tight * 2
+
+                Column {
+                    id: body
+                    x: Spacing.tight
+                    y: Spacing.tight
+                    width: parent.width - Spacing.tight * 2
                 }
-            }
-
-            Column {
-                id: body
-                x: Spacing.tight
-                y: Spacing.tight
-                width: parent.width - Spacing.tight * 2
             }
         }
     }
