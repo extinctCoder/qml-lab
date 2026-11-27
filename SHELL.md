@@ -4,16 +4,17 @@ The component library is finished. This plan covers the next phase: a desktop sh
 
 ## Where we are
 
-The component library is finished: 12 families and 7 shared behaviors, all shown in the gallery and described in `DESIGN.md`. The shell is built from these parts; no panel draws its own buttons, rows or bars.
+The foundation is the **Tui style**: a Qt Quick Controls style — about 40 controls — painted from Material 3 tokens, documented in `ARCHITECTURE.md` and `DESIGN.md` and shown in `gallery/`. Qt's Templates own behaviour; Tui owns the look. The shell is built from these parts; no panel draws its own buttons, rows or bars.
 
 | Layer | What's in it |
 | --- | --- |
-| `theme/` | tokens: Colors (Material 3 roles), Type, Spacing, Shape, Motion, States |
-| core | `Surface` (every box and its states), `Strip` (every row), `Labeled` (a row with icon, title and label) |
-| families | `text`, `mark`, `button`, `section`, `feedback`, `range`, `tabs`, `field`, `picker`, `badge`, `chart` |
-| behaviors | `Interactive`, `Roving`, `Highlight`, `Popup`, `Glide`, `ColorGlide`, the fuzzy matcher |
+| `theme/` | M3 tokens: Colors, States, Shape, Spacing, Motion, Type |
+| `Tui/` | the style — every Qt Quick Control (Button, Slider, Switch, TextField, ComboBox, TabBar, Menu, Dialog, …) themed from the tokens |
+| `primitives/` | things Qt has no control for: Divider, Keycap, Avatar, Combo, Image |
 
-What this gives the shell: a panel only arranges components and connects them to data. Looks, states, keyboard rules, popups and motion are already decided and tested.
+What this gives the shell: a panel only arranges controls and connects them to data. Looks, states, keyboard rules, popups and motion are already decided and tested.
+
+**Still to build on Tui** — the shell needs these and Qt has no control for them, so they are built from primitives + tokens when their milestone arrives (the panel tables below already name them): charts (`Chart.Spark`, `Chart.Columns`), the fuzzy launcher list (`Picker.Palette`), circular and seek ranges (`Range.Ring`, `Range.Seek`), `Badge.Count`, empty/error feedback (`Feedback`), titled list sections (`Section`), and the list and tile buttons (`Button.ListItem`, `Button.Tile`). The plain Qt Quick Controls they sit beside — buttons, slider, switch, fields, tabs, menu — come from Tui today.
 
 ## The architecture
 
@@ -41,7 +42,7 @@ The shell runs only on seraphpc (EndeavourOS + Hyprland): Quickshell is Linux an
 
 1. **Install the release package.** Arch ships Quickshell in its official repositories, so on EndeavourOS it's `sudo pacman -S quickshell` ([install guide](https://quickshell.org/docs/v0.3.2/guide/install-setup/)). The AUR `quickshell-git` tracks the master branch instead, but the docs warn it can break whenever Qt updates; the release package avoids that.
 2. **Create the config folder.** Quickshell looks for `~/.config/quickshell/shell.qml` as the default config, or one config per subfolder (`~/.config/quickshell/<name>/shell.qml`, started with `qs -c <name>`). Any other folder can be run with `qs -p <path>` ([introduction](https://quickshell.org/docs/v0.3.2/guide/introduction/)).
-3. **Make qml-lab importable.** The shell needs `theme` and `components.*` from the qml-lab repo. How exactly is an open question (below); the repo itself stays the single source of the library.
+3. **Make qml-lab importable.** The shell needs `theme`, `Tui` and `primitives` from the qml-lab repo, and the Tui style selected (`QQuickStyle.setStyle("Tui")`). How exactly is an open question (below); the repo itself stays the single source of the library.
 4. **Turn on the language server.** An empty `.qmlls.ini` next to `shell.qml` is replaced by Quickshell with a managed qmlls config; it stays out of git, since its content differs per machine.
 5. **Work with live reload.** Quickshell reloads the shell whenever a file is saved, the same loop as `dev.py` on the Mac.
 6. **Start it with Hyprland**: `exec-once = qs` in the Hyprland config, once the bar works.
@@ -268,7 +269,7 @@ The same rules that built the library carry over to the shell.
 
 ## Open questions
 
-1. **How does the shell import qml-lab?** Quickshell turns folders inside the config into `qs.<folder>` modules and adds the config root as an import path. The library's modules are named `theme` and `components.*`, so either the shell points Qt's import path at `qml-lab/src` (no renames), or the library moves into the config and its module names change. To try on seraphpc first.
+1. **How does the shell import qml-lab?** Quickshell turns folders inside the config into `qs.<folder>` modules and adds the config root as an import path. The library's modules are named `theme`, `Tui` and `primitives` at the repo root, so either the shell points Qt's import path at the qml-lab repo root (no renames) and selects the Tui style, or the library moves into the config and its module names change. To try on seraphpc first.
 2. **Where does the shell's code live?** In the qml-lab repo next to the library (one repo), or its own repo that uses qml-lab (two repos).
 3. **Which tool for night light?** Something to run from the `Display` service on Hyprland; to choose and check against its docs.
 4. **Weather on the dashboard:** which source, and is it worth a network call at all.
