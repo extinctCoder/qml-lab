@@ -22,11 +22,14 @@ ships the machine, so building one was redundant.
 ## The layers
 
 ```
-theme/        M3 tokens: Colors, States, Shape, Spacing, Motion, Type + Theme.qml (root wrapper)
-Tui/          the style — one delegate per Qt Quick Control, rooted on T.<Type>, reads the tokens
-primitives/   things Qt has no control for: Divider, Keycap, Avatar, Combo, Image — plain Items, same tokens
-gallery/      the showcase + state/popup harnesses; dev.py runs it with live reload
+lib/theme/        M3 tokens: Colors, States, Shape, Spacing, Motion, Type + Theme.qml (root wrapper)
+lib/Tui/          the style — one delegate per Qt Quick Control, rooted on T.<Type>, reads the tokens
+lib/primitives/   things Qt has no control for: Divider, Keycap, Avatar, Combo, Image — plain Items, same tokens
+gallery/          the showcase + state/popup harnesses; dev.py runs it with live reload
 ```
+
+The library modules (`theme`, `Tui`, `primitives`) live under `lib/`, which is
+the QML import path; `dev.py` and the shell add `lib/` so `import theme` resolves.
 
 A Tui delegate imports `theme` and `QtQuick.Templates`, never `QtQuick.Controls`
 — so it cannot recurse into itself.
@@ -73,9 +76,9 @@ and the default mono font. There is no `palette` block anywhere.
 
 ## Adding a control
 
-1. `Tui/<Type>.qml`, root `T.<Type>`; copy the implicit-size block from a peer.
+1. `lib/Tui/<Type>.qml`, root `T.<Type>`; copy the implicit-size block from a peer.
 2. `contentItem` + `background`/`indicator` reading `Colors` + `States`, per above.
-3. Register it in `Tui/qmldir`.
+3. Register it in `lib/Tui/qmldir`.
 4. Show it in `gallery/` and check every state in `gallery/StatesTest.qml`.
 
 ## Invariants

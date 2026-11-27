@@ -50,7 +50,7 @@ if __name__ == "__main__":
     view = QQuickView()
     view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)
     view.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)
-    view.engine().addImportPath(str(ROOT))
+    view.engine().addImportPath(str(ROOT / "lib"))
 
     state = {"files": snapshot(), "reloads": 0}
     errors = load(view, target)

@@ -8,9 +8,10 @@ The foundation is the **Tui style**: a Qt Quick Controls style — about 40 cont
 
 | Layer | What's in it |
 | --- | --- |
-| `theme/` | M3 tokens: Colors, States, Shape, Spacing, Motion, Type |
-| `Tui/` | the style — every Qt Quick Control (Button, Slider, Switch, TextField, ComboBox, TabBar, Menu, Dialog, …) themed from the tokens |
-| `primitives/` | things Qt has no control for: Divider, Keycap, Avatar, Combo, Image |
+| `lib/theme/` | M3 tokens: Colors, States, Shape, Spacing, Motion, Type |
+| `lib/Tui/` | the style — every Qt Quick Control (Button, Slider, Switch, TextField, ComboBox, TabBar, Menu, Dialog, …) themed from the tokens |
+| `lib/primitives/` | things Qt has no control for: Divider, Keycap, Avatar, Combo, Image |
+| `shell/` | the shell itself: `sim/` (the mock spine), `panels/`, `lab.qml` |
 
 What this gives the shell: a panel only arranges controls and connects them to data. Looks, states, keyboard rules, popups and motion are already decided and tested.
 
@@ -269,7 +270,7 @@ The same rules that built the library carry over to the shell.
 
 ## Open questions
 
-1. **How does the shell import qml-lab?** Quickshell turns folders inside the config into `qs.<folder>` modules and adds the config root as an import path. The library's modules are named `theme`, `Tui` and `primitives` at the repo root, so either the shell points Qt's import path at the qml-lab repo root (no renames) and selects the Tui style, or the library moves into the config and its module names change. To try on seraphpc first.
+1. **How does the shell import qml-lab?** Quickshell turns folders inside the config into `qs.<folder>` modules and adds the config root as an import path. The library's modules are named `theme`, `Tui` and `primitives` under `lib/`, so either the shell points Qt's import path at `qml-lab/lib` (no renames) and selects the Tui style, or the library moves into the config and its module names change. To try on seraphpc first.
 2. **Where does the shell's code live?** In the qml-lab repo next to the library (one repo), or its own repo that uses qml-lab (two repos).
 3. **Which tool for night light?** Something to run from the `Display` service on Hyprland; to choose and check against its docs.
 4. **Weather on the dashboard:** which source, and is it worth a network call at all.
