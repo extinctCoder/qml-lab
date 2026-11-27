@@ -3,9 +3,7 @@ export QT_QUICK_CONTROLS_STYLE := Tui
 IMPORTS := -I lib -I shell/sim
 FILE ?= gallery/Gallery.qml
 
-.PHONY: run watch lab preview debug lint
-
-PORT ?= 5050
+.PHONY: run watch lab lint
 
 run:    ## run FILE (default: the gallery)
 	qml $(IMPORTS) $(FILE)
@@ -15,12 +13,6 @@ watch:  ## run FILE with hot reload
 
 lab:    ## run the shell lab with hot reload
 	$(MAKE) watch FILE=shell/sim/lab.qml
-
-preview: ## start FILE on PORT for VS Code "Qt: Preview QML" to connect (or just use `make lab`)
-	qml -qmljsdebugger=host:127.0.0.1,port:$(PORT),block,services:QmlPreview $(IMPORTS) $(FILE)
-
-debug:  ## run FILE with the QML debugger listening on PORT; attach from VS Code (F5)
-	qml -qmljsdebugger=host:127.0.0.1,port:$(PORT),block,services:DebugMessages,QmlDebugger,V8Debugger,QmlInspector $(IMPORTS) $(FILE)
 
 lint:   ## qmllint the library, shell and gallery
 	qmllint $(IMPORTS) $$(find lib shell gallery -name '*.qml')
