@@ -1,6 +1,0 @@
-module components.ui.keycap
-
-internal Base Base.qml
-
-Basic Basic.qml
-Combo Combo.qml

@@ -1,8 +1,0 @@
-module components.ui
-
-Surface Surface.qml
-StateLayer StateLayer.qml
-Strip Strip.qml
-Labeled Labeled.qml
-Divider Divider.qml
-Scrollbar Scrollbar.qml

@@ -1,6 +1,0 @@
-module components.ui.image
-
-internal Base Base.qml
-
-Basic Basic.qml
-Avatar Avatar.qml

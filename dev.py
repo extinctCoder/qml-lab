@@ -1,13 +1,11 @@
-"""Run src/main.qml and reload it whenever a .qml file (or qmldir) in src/ changes.
+"""Run the qml-lab gallery with live reload.
 
-    uv run dev.py                   # src/main.qml
-    uv run dev.py src/gallery/Gallery.qml
+The Tui style (QQuickStyle "Tui") paints every control from the M3 tokens in
+theme/, so the whole tree is themed with no palette. Edit any .qml under the
+repo and the window reloads.
 
-Every 0.3 s it compares each file's modification time with the last check:
-the same on every OS and with every editor, and cheap for a project this size.
-The window stays open (and on top); QML errors print here and the last good
-view stays until the file is fixed. src/ is also where QML modules (theme,
-components) are imported from. Ctrl+C stops it.
+    uv run dev.py
+    uv run dev.py gallery/Catalogue.qml
 """
 
 import signal
@@ -18,25 +16,24 @@ from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QUrl
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQuick import QQuickView
+from PySide6.QtQuickControls2 import QQuickStyle
 
-SRC = Path(__file__).parent / "src"
-
-
-def snapshot():
-    """Every watched file and its modification time."""
-    return {
-        p: p.stat().st_mtime_ns
-        for p in SRC.rglob("*")
-        if p.is_file() and (p.suffix == ".qml" or p.name == "qmldir")
-    }
+ROOT = Path(__file__).parent
 
 
 def load(view, target):
     view.setSource(QUrl())
-    view.engine().clearSingletons()
     view.engine().clearComponentCache()
     view.setSource(QUrl.fromLocalFile(str(target.resolve())))
     return [e.toString() for e in view.errors()]
+
+
+def snapshot():
+    return {
+        p: p.stat().st_mtime_ns
+        for p in ROOT.rglob("*")
+        if p.is_file() and (p.suffix == ".qml" or p.name == "qmldir")
+    }
 
 
 def log(message):
@@ -44,59 +41,38 @@ def log(message):
 
 
 if __name__ == "__main__":
-    target = Path(sys.argv[1]) if len(sys.argv) > 1 else SRC / "main.qml"
+    target = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "gallery" / "Gallery.qml"
 
     app = QGuiApplication(sys.argv)
     app.styleHints().setTabFocusBehavior(Qt.TabFocusBehavior.TabFocusAllControls)
+    QQuickStyle.setStyle("Tui")
+
     view = QQuickView()
-    view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)  # stay above the editor
+    view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)
     view.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)
-    view.engine().addImportPath(str(SRC))  # `import theme`, `import components`
+    view.engine().addImportPath(str(ROOT))
 
     state = {"files": snapshot(), "reloads": 0}
     errors = load(view, target)
-    log(
-        f"loaded {target.relative_to(SRC.parent) if target.is_relative_to(SRC.parent) else target}"
-        f", watching {len(state['files'])} file(s) in src/"
-    )
+    log(f"loaded {target.name} · Tui style, watching {len(state['files'])} file(s)")
     for e in errors:
         print("  " + e, flush=True)
 
     def check():
         now = snapshot()
-        before = state["files"]
-        if now == before:
+        if now == state["files"]:
             return
-        changes = (
-            [f"{p.relative_to(SRC.parent)} (added)" for p in now.keys() - before.keys()]
-            + [
-                f"{p.relative_to(SRC.parent)} (removed)"
-                for p in before.keys() - now.keys()
-            ]
-            + [
-                f"{p.relative_to(SRC.parent)} (modified)"
-                for p in now.keys() & before.keys()
-                if now[p] != before[p]
-            ]
-        )
         state["files"] = now
         state["reloads"] += 1
         errors = load(view, target)
-        log(
-            f"reload #{state['reloads']}: {', '.join(sorted(changes))}"
-            + (" · errors:" if errors else " · ok")
-        )
+        log(f"reload #{state['reloads']}" + (" · errors:" if errors else " · ok"))
         for e in errors:
             print("  " + e, flush=True)
 
     poll = QTimer(interval=300)
     poll.timeout.connect(check)
     poll.start()
-
-    # Ctrl+C: Python only sees it while Python code runs (the poll above runs every
-    # 0.3 s), and inside a Qt callback it would be swallowed: quit the app instead.
     signal.signal(signal.SIGINT, lambda *_: (log("stopped"), app.quit()))
-
     view.setTitle("qml-lab")
     view.show()
     sys.exit(app.exec())
