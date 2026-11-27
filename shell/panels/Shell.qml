@@ -67,6 +67,14 @@ Item {
         anchors.rightMargin: Spacing.inner
     }
 
+    function toggleSpotlight() { spotlight.open = !spotlight.open }
+
+    Spotlight {
+        id: spotlight
+        anchors.fill: parent
+        backdrop: wallpaper
+    }
+
     // the lockscreen covers everything, bar included
     LockScreen {
         id: lockScreen

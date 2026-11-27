@@ -89,6 +89,10 @@ Theme {
                         checked: Session.locked
                         onToggled: checked ? Session.lock() : Session.unlock("")
                     }
+                    Button {
+                        text: "spotlight"
+                        onClicked: shellView.toggleSpotlight()
+                    }
 
                     Item { Layout.fillHeight: true; Layout.preferredHeight: Spacing.gap }
 
@@ -127,7 +131,7 @@ Theme {
                     transformOrigin: Item.TopLeft
                     scale: stage.s
 
-                    Panels.Shell { anchors.fill: parent }
+                    Panels.Shell { id: shellView; anchors.fill: parent }
                 }
             }
         }
