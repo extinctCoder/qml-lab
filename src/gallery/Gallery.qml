@@ -12,6 +12,8 @@ import components.ui.range as Range
 import components.ui.tabs as Tabs
 import components.ui.field as Field
 import components.ui.picker as Picker
+import components.ui.badge as Badge
+import components.ui.chart as Chart
 import components.behaviors
 
 Rectangle {
@@ -40,6 +42,33 @@ Rectangle {
     property string launched: ""
     property string layout: ""
     property string action: ""
+    property var cpu: [30, 34, 31, 40, 38, 45, 42, 37, 35, 41, 47, 44, 39, 36, 33, 38, 42, 46, 43, 37]
+    property var memory: [61, 61, 62, 62, 63, 62, 62, 63, 64, 63, 63, 62, 62, 63, 63, 64, 64, 63, 62, 62]
+    property var cores: [37, 62, 18, 80, 44, 25, 55, 30]
+    property var history: Array.from({ length: 60 }, (_, i) => 30 + Math.round(Math.sin(i / 6) * 15))
+    property var download: Array.from({ length: 40 }, (_, i) => 50 + Math.round(Math.sin(i / 5) * 20))
+    property var upload: Array.from({ length: 40 }, (_, i) => 10 + Math.round(Math.cos(i / 4) * 4))
+    property int notifications: 3
+
+    function walk(list, step, low, high) {
+        const last = list[list.length - 1];
+        const next = Math.max(low, Math.min(high, Math.round(last + (Math.random() * 2 - 1) * step)));
+        return list.slice(1).concat([next]);
+    }
+
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            gallery.cpu = gallery.walk(gallery.cpu, 9, 3, 97);
+            gallery.memory = gallery.walk(gallery.memory, 1, 40, 90);
+            gallery.cores = gallery.cores.map(v => Math.max(2, Math.min(100, Math.round(v + (Math.random() * 2 - 1) * 14))));
+            gallery.history = gallery.walk(gallery.history, 10, 3, 97);
+            gallery.download = gallery.walk(gallery.download, 12, 5, 95);
+            gallery.upload = gallery.walk(gallery.upload, 3, 2, 30);
+        }
+    }
     readonly property var apps: [
         { icon: "▣", title: "zen browser", description: "web browser" },
         { icon: "▣", title: "zed", description: "editor" },
@@ -1123,6 +1152,150 @@ Rectangle {
                 anchor: more
                 options: [{ title: "copy", meta: "ctrl c" }, { title: "rename", meta: "f2" }, { title: "move to trash", meta: "del" }, { title: "properties" }]
                 onPicked: option => gallery.action = option.title
+            }
+
+            Text.Mono {
+                text: "11 · Badge"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Count · on an icon's corner · 99+ above the limit · hidden at 0 · click the bell to add one"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.edge
+                Item {
+                    width: 24
+                    height: 22
+                    Text.Mono {
+                        id: bell
+                        text: "♫"
+                        tone: Colors.primary
+                        TapHandler {
+                            onTapped: gallery.notifications += 1
+                        }
+                    }
+                    Badge.Count {
+                        anchors.left: bell.right
+                        anchors.leftMargin: -4
+                        anchors.top: bell.top
+                        anchors.topMargin: -6
+                        count: gallery.notifications
+                    }
+                }
+                Badge.Count {
+                    count: 12
+                }
+                Badge.Count {
+                    count: 150
+                    error: true
+                }
+                Badge.Count {
+                    count: 0
+                }
+                Badge.Dot {
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Badge.Dot {
+                    anchors.verticalCenter: parent.verticalCenter
+                    error: true
+                }
+            }
+
+            Text.Mono {
+                text: "Tag · outlined · accent · tonal · error · disabled"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.inner
+                Badge.Tag {
+                    text: "saved"
+                }
+                Badge.Tag {
+                    text: "connected"
+                    look: "accent"
+                }
+                Badge.Tag {
+                    text: "new"
+                    look: "tonal"
+                }
+                Badge.Tag {
+                    text: "failed"
+                    look: "error"
+                }
+                Badge.Tag {
+                    text: "off"
+                    enabled: false
+                }
+            }
+
+            Text.Mono {
+                text: "12 · Chart"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Spark · a line with a filled area, next to its value (live)"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                Chart.Spark {
+                    width: parent.width
+                    title: "cpu"
+                    title_width: 64
+                    values: gallery.cpu
+                    label: gallery.cpu[gallery.cpu.length - 1] + "%"
+                }
+                Chart.Spark {
+                    width: parent.width
+                    title: "memory"
+                    title_width: 64
+                    values: gallery.memory
+                    label: gallery.memory[gallery.memory.length - 1] + "%"
+                }
+            }
+
+            Text.Mono {
+                text: "Columns · one block per value: cores now, or a minute of history"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                Chart.Columns {
+                    width: parent.width
+                    title: "cores"
+                    title_width: 64
+                    values: gallery.cores
+                }
+                Chart.Columns {
+                    width: parent.width
+                    title: "60 s"
+                    title_width: 64
+                    values: gallery.history
+                }
+            }
+
+            Text.Mono {
+                text: "Lines · two series in one plot · to: 0 scales to the highest value"
+                size: "label"
+                muted: true
+            }
+            Chart.Lines {
+                width: 420
+                title: "network"
+                title_width: 64
+                to: 0
+                values: gallery.download
+                second: gallery.upload
+                label: "↓ " + (gallery.download[gallery.download.length - 1] / 25).toFixed(1) + " MB/s"
             }
         }
     }

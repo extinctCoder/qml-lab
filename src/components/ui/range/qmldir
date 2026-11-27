@@ -1,8 +1,8 @@
 module components.ui.range
 
 internal Base Base.qml
-internal Line Line.qml
 internal Bar Bar.qml
+internal Linear Linear.qml
 
 Basic Basic.qml
 Slider Slider.qml

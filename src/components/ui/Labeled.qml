@@ -1,6 +1,5 @@
 import QtQuick
 import theme
-import components.ui
 import components.ui.text as Text
 
 Item {

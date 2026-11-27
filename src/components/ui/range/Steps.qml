@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import components.ui
 import theme
 import components.behaviors
 
@@ -13,7 +14,7 @@ Base {
     implicitWidth: line.implicitWidth
     implicitHeight: line.implicitHeight
 
-    Line {
+    Labeled {
         id: line
         anchors.fill: parent
         icon: root.icon

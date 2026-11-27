@@ -1,4 +1,5 @@
 import QtQuick
+import components.ui
 
 Base {
     id: root
@@ -7,7 +8,7 @@ Base {
 
     implicitHeight: line.implicitHeight
 
-    Line {
+    Labeled {
         id: line
         anchors.fill: parent
         icon: root.icon

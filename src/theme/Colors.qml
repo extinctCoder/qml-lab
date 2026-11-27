@@ -14,6 +14,7 @@ QtObject {
     readonly property color secondary_container: "#3c4d31"
     readonly property color on_secondary_container: "#d8ebc6"
     readonly property color error: "#ffb4ab"
+    readonly property color on_error: "#690005"
     readonly property color outline: "#8f9586"
     readonly property color on_primary: "#1a3705"
     readonly property color outline_variant: "#44483e"
