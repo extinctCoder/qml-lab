@@ -1,0 +1,3 @@
+module theme
+singleton Tokens Tokens.qml
+Theme Theme.qml

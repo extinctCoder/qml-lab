@@ -37,10 +37,15 @@ FocusScope {
         padding_y: 0
         line: Colors.outline_variant
         invalid: root.error !== ""
-        current: editor.activeFocus || hover.hovered
 
         Behavior on border.color {
             ColorGlide {}
+        }
+
+        StateLayer {
+            anchors.fill: parent
+            radius: box.radius
+            current: editor.activeFocus || hover.hovered
         }
 
         HoverHandler {

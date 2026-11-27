@@ -1,0 +1,6 @@
+module primitives
+Divider Divider.qml
+Keycap Keycap.qml
+Combo Combo.qml
+Image Image.qml
+Avatar Avatar.qml

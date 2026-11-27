@@ -23,8 +23,6 @@ Surface {
 
     appearance: "outlined"
     selected: checkable && checked
-    current: chip_input.current
-    pressed: chip_input.pressed
     padding_x: Spacing.tight + 2
     padding_y: 1
 
@@ -67,6 +65,13 @@ Surface {
                 }
             }
         ]
+    }
+
+    StateLayer {
+        anchors.fill: parent
+        radius: root.radius
+        current: chip_input.current
+        pressed: chip_input.pressed
     }
 
     Interactive {

@@ -10,9 +10,6 @@ Rectangle {
     property color line: Colors.outline_variant
     property bool selected: false
     property bool invalid: false
-    property bool current: false
-    property bool pressed: false
-    property color tint: Colors.on_surface
     property int padding_x: Spacing.inner
     property int padding_y: Spacing.inner
     default property alias content: area.data
@@ -31,14 +28,6 @@ Rectangle {
 
     implicitWidth: area.children.reduce((w, c) => c.visible ? Math.max(w, c.implicitWidth) : w, 0) + pad_x * 2
     implicitHeight: area.children.reduce((h, c) => c.visible ? Math.max(h, c.implicitHeight) : h, 0) + pad_y * 2
-
-    StateLayer {
-        anchors.fill: parent
-        radius: root.radius
-        current: root.current
-        pressed: root.pressed
-        tint: root.tint
-    }
 
     Item {
         id: area
