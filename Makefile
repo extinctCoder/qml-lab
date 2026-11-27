@@ -6,10 +6,10 @@ FILE ?= gallery/Gallery.qml
 .PHONY: run watch lab lint
 
 run:    ## run FILE (default: the gallery)
-	qml $(FILE) $(IMPORTS)
+	qml $(IMPORTS) $(FILE)
 
 watch:  ## run FILE with hot reload
-	qmlpreview qml $(FILE) $(IMPORTS)
+	qmlpreview qml $(IMPORTS) $(FILE)
 
 lab:    ## run the shell lab with hot reload
 	$(MAKE) watch FILE=shell/sim/lab.qml
