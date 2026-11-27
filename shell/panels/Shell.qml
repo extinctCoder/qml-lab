@@ -26,6 +26,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         onQuickSettings: quick.open = !quick.open
+        onOverview: { quick.open = false; activities.open = true }
     }
 
     QuickSettings {
@@ -34,5 +35,11 @@ Item {
         anchors.right: parent.right
         anchors.topMargin: Spacing.inner
         anchors.rightMargin: Spacing.inner
+    }
+
+    // full-screen overlay — above everything
+    Overview {
+        id: activities
+        anchors.fill: parent
     }
 }

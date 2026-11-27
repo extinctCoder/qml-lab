@@ -4,11 +4,13 @@ import theme
 import services
 
 // The top bar. It only reads services and reports clicks; it never knows the
-// values are simulated. Clicking the status cluster asks for quick settings.
+// values are simulated. Far-left dots open the overview; the status cluster
+// opens quick settings.
 Rectangle {
     id: bar
 
     signal quickSettings()
+    signal overview()
 
     implicitHeight: 34
     color: Colors.surface_container
@@ -22,11 +24,38 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: Spacing.gap
+        anchors.leftMargin: Spacing.tight
         anchors.rightMargin: Spacing.tight
         spacing: Spacing.gap
 
-        // ── workspaces (left) ───────────────────────────────────────────
+        // ── activities / overview (app-grid dots) ───────────────────────
+        MouseArea {
+            id: appsBtn
+            Layout.preferredWidth: 28
+            Layout.fillHeight: true
+            hoverEnabled: true
+            onClicked: bar.overview()
+
+            Rectangle {
+                anchors.fill: parent
+                radius: Shape.radius
+                color: Colors.on_surface
+                opacity: appsBtn.pressed ? States.pressed : appsBtn.containsMouse ? States.hover : 0
+                Behavior on opacity { NumberAnimation { duration: Motion.small } }
+            }
+            Grid {
+                anchors.centerIn: parent
+                columns: 2
+                rowSpacing: 3
+                columnSpacing: 3
+                Repeater {
+                    model: 4
+                    Rectangle { width: 4; height: 4; radius: 1; color: Colors.on_surface_variant }
+                }
+            }
+        }
+
+        // ── workspaces ──────────────────────────────────────────────────
         Row {
             spacing: Spacing.tight
             Repeater {
