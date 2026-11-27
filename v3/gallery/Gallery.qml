@@ -3,30 +3,30 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import theme
 
-// The full default Qt Quick Controls catalogue, themed by ONE injected palette.
-// Root is Theme — Qt propagates its palette to every control below. There is no
-// per-control palette anywhere in this file.
+// The Tui style showcase. Plain Qt Controls — the Tui style gives them the look,
+// the M3 Colors tokens give them the colour. One accent (green) on every active
+// mark. Controls not yet in the Tui set fall back to Basic, themed by the slim
+// palette in Theme.qml.
 Theme {
     id: gallery
-    width: 1020
-    height: 760
+    width: 560
+    height: 720
 
-    // ── one reusable section frame ──────────────────────────────────────────
     component Section: ColumnLayout {
         default property alias content: box.data
         property string title
         Layout.fillWidth: true
-        spacing: Tokens.inner
+        spacing: Spacing.inner
         Label {
             text: parent.title
-            color: palette.accent
-            font.pixelSize: Tokens.title
-            font.family: Tokens.family
+            color: Colors.primary
+            font.pixelSize: Type.title
+            font.family: Type.family
         }
         Flow {
             id: box
             Layout.fillWidth: true
-            spacing: Tokens.gap
+            spacing: Spacing.gap
         }
     }
 
@@ -36,43 +36,38 @@ Theme {
 
         ColumnLayout {
             width: gallery.width
-            spacing: Tokens.edge * 1.5
+            spacing: Spacing.edge
 
-            // leave room so the scrollbar never sits on content
-            Item { implicitHeight: Tokens.inner; Layout.fillWidth: true }
+            Item { implicitHeight: Spacing.tight; Layout.fillWidth: true }
 
             Label {
-                text: "qml-lab · full catalogue · one injected palette"
-                color: palette.accent
-                font.pixelSize: Tokens.display * 0.5
-                font.family: Tokens.family
-                Layout.leftMargin: Tokens.edge
+                text: "qml-lab · Tui style · M3 tokens"
+                color: Colors.primary
+                font.pixelSize: Type.display * 0.5
+                font.family: Type.family
+                Layout.leftMargin: Spacing.edge
             }
 
             ColumnLayout {
-                Layout.leftMargin: Tokens.edge
-                Layout.rightMargin: Tokens.edge
+                Layout.leftMargin: Spacing.edge
+                Layout.rightMargin: Spacing.edge
                 Layout.fillWidth: true
-                spacing: Tokens.edge * 1.2
+                spacing: Spacing.edge
 
-                // ── buttons ──────────────────────────────────────────────
                 Section {
                     title: "Buttons"
-                    Button { text: "button" }
-                    Button { text: "accent"; highlighted: true }
-                    Button { text: "flat"; flat: true }
+                    Button { text: "outline" }
+                    Button { text: "primary"; variant: "primary" }
+                    Button { text: "tonal"; variant: "tonal" }
+                    Button { text: "ghost"; variant: "ghost" }
+                    Button { text: "danger"; variant: "danger" }
                     Button { text: "checked"; checkable: true; checked: true }
-                    RoundButton { text: "+" }
-                    ToolButton { text: "tool" }
-                    DelayButton { text: "hold"; delay: 800 }
-                    Button { text: "off"; enabled: false }
+                    Button { text: "off"; variant: "primary"; enabled: false }
                 }
 
-                // ── toggles ──────────────────────────────────────────────
                 Section {
                     title: "Toggles"
                     CheckBox { text: "wi-fi"; checked: true }
-                    CheckBox { text: "mixed"; tristate: true; checkState: Qt.PartiallyChecked }
                     CheckBox { text: "bluetooth" }
                     RadioButton { text: "eco"; checked: true }
                     RadioButton { text: "balanced" }
@@ -80,136 +75,71 @@ Theme {
                     Switch { text: "off" }
                 }
 
-                // ── selection & numeric ──────────────────────────────────
                 Section {
                     title: "Selection · numeric"
                     ComboBox { model: ["eco", "balanced", "performance"] }
-                    ComboBox { editable: true; model: ["eth0", "wlan0", "lo"] }
                     SpinBox { value: 3; from: 0; to: 10 }
                 }
 
-                // ── sliders & dial ───────────────────────────────────────
                 Section {
-                    title: "Sliders · dial"
-                    Slider { implicitWidth: 240; value: 0.55 }
-                    RangeSlider { implicitWidth: 240; first.value: 0.25; second.value: 0.75 }
-                    Dial { implicitWidth: 72; implicitHeight: 72; value: 0.3 }
-                }
-
-                // ── progress & activity ──────────────────────────────────
-                Section {
-                    title: "Progress · activity"
+                    title: "Sliders · progress"
+                    Slider { implicitWidth: 200; value: 0.55 }
                     ProgressBar { implicitWidth: 200; value: 0.62 }
                     ProgressBar { implicitWidth: 200; indeterminate: true }
-                    BusyIndicator { running: true }
-                    PageIndicator { count: 5; currentIndex: 2 }
                 }
 
-                // ── text input ───────────────────────────────────────────
                 Section {
-                    title: "Text input"
+                    title: "Text"
                     TextField { placeholderText: "hostname…"; text: "home" }
                     TextField { placeholderText: "password"; echoMode: TextInput.Password; text: "secret" }
-                    Frame {
-                        implicitWidth: 240
-                        TextArea {
-                            anchors.fill: parent
-                            placeholderText: "multi-line…"
-                            text: "journalctl -f\n systemctl status"
-                        }
-                    }
                 }
 
-                // ── containers ───────────────────────────────────────────
                 Section {
                     title: "Containers"
                     Frame {
                         ColumnLayout {
-                            Label { text: "Frame"; color: palette.text }
-                            Label { text: "bordered box"; color: palette.placeholderText }
-                        }
-                    }
-                    GroupBox {
-                        title: "GroupBox"
-                        ColumnLayout {
-                            CheckBox { text: "autostart"; checked: true }
-                            CheckBox { text: "notify" }
+                            Label { text: "Frame"; color: Colors.on_surface }
+                            Label { text: "bordered"; color: Colors.on_surface_variant }
                         }
                     }
                     Pane {
                         ColumnLayout {
-                            Label { text: "Pane"; color: palette.text }
-                            Label { text: "flat surface"; color: palette.placeholderText }
+                            Label { text: "Pane"; color: Colors.on_surface }
+                            Label { text: "surface"; color: Colors.on_surface_variant }
                         }
                     }
                 }
 
-                // ── tabs & paged views ───────────────────────────────────
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: Tokens.inner
-                    Label {
-                        text: "Tabs · paged views"
-                        color: palette.accent
-                        font.pixelSize: Tokens.title
-                    }
+                    spacing: Spacing.inner
+                    Label { text: "Tabs"; color: Colors.primary; font.pixelSize: Type.title }
                     TabBar {
                         Layout.fillWidth: true
                         TabButton { text: "overview" }
                         TabButton { text: "media" }
                         TabButton { text: "system" }
                     }
-                    SwipeView {
-                        id: swipe
-                        Layout.fillWidth: true
-                        implicitHeight: 54
-                        clip: true
-                        Pane { Label { text: "page one · swipe →"; color: palette.text } }
-                        Pane { Label { text: "page two"; color: palette.text } }
-                        Pane { Label { text: "page three"; color: palette.text } }
-                    }
-                    PageIndicator { count: swipe.count; currentIndex: swipe.currentIndex; Layout.alignment: Qt.AlignHCenter }
                 }
 
-                // ── toolbar ──────────────────────────────────────────────
                 ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: Tokens.inner
-                    Label { text: "ToolBar"; color: palette.accent; font.pixelSize: Tokens.title }
-                    ToolBar {
-                        Layout.fillWidth: true
-                        RowLayout {
-                            anchors.fill: parent
-                            ToolButton { text: "file" }
-                            ToolButton { text: "edit" }
-                            ToolSeparator {}
-                            ToolButton { text: "view" }
-                            Item { Layout.fillWidth: true }
-                            ToolButton { text: "⋯" }
-                        }
-                    }
-                }
-
-                // ── list delegates ───────────────────────────────────────
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: Tokens.inner
-                    Label { text: "List delegates"; color: palette.accent; font.pixelSize: Tokens.title }
+                    spacing: Spacing.inner
+                    Label { text: "List"; color: Colors.primary; font.pixelSize: Type.title }
                     Frame {
                         Layout.fillWidth: true
                         padding: 0
                         ColumnLayout {
                             width: parent ? parent.width : 0
                             spacing: 0
-                            ItemDelegate { text: "ItemDelegate · selected"; highlighted: true; Layout.fillWidth: true }
-                            CheckDelegate { text: "CheckDelegate"; checked: true; Layout.fillWidth: true }
-                            RadioDelegate { text: "RadioDelegate"; checked: true; Layout.fillWidth: true }
-                            SwitchDelegate { text: "SwitchDelegate"; checked: true; Layout.fillWidth: true }
+                            ItemDelegate { text: "selected row"; highlighted: true; Layout.fillWidth: true }
+                            ItemDelegate { text: "a plain row"; Layout.fillWidth: true }
+                            CheckDelegate { text: "a check row"; checked: true; Layout.fillWidth: true }
+                            RadioDelegate { text: "a radio row"; checked: true; Layout.fillWidth: true }
                         }
                     }
                 }
 
-                // ── popups (wired to triggers) ───────────────────────────
                 Section {
                     title: "Popups (click / hover)"
                     Button {
@@ -224,27 +154,14 @@ Theme {
                         }
                     }
                     Button {
-                        text: "dialog"
-                        onClicked: dlg.open()
-                    }
-                    Button {
                         text: "tooltip"
                         ToolTip.visible: hovered
                         ToolTip.text: "hover tooltip"
                     }
                 }
+
+                Item { implicitHeight: Spacing.edge; Layout.fillWidth: true }
             }
-
-            Item { implicitHeight: Tokens.edge; Layout.fillWidth: true }
         }
-    }
-
-    Dialog {
-        id: dlg
-        title: "confirm"
-        anchors.centerIn: parent
-        modal: true
-        standardButtons: Dialog.Ok | Dialog.Cancel
-        Label { text: "apply changes?"; color: palette.text }
     }
 }

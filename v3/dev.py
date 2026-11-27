@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     app = QGuiApplication(sys.argv)
     app.styleHints().setTabFocusBehavior(Qt.TabFocusBehavior.TabFocusAllControls)
-    QQuickStyle.setStyle("Fusion")
+    QQuickStyle.setStyle("Tui")
 
     view = QQuickView()
     view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)

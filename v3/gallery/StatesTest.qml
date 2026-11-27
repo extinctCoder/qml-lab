@@ -3,40 +3,39 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import theme
 
-// State matrix: every control × every state that changes colour, so the palette
-// can be proven not to break anywhere. Forced states: down (pressed), checked,
-// highlighted, disabled — declaratively. hover + visualFocus are forced by the
-// driver (states_driver.py) via synthetic events.
+// State matrix for the Tui style. Every Tui-styled control × every colour-bearing
+// state. The point to verify: the active mark is the SAME green everywhere
+// (checkbox, radio, switch, slider, progress, selected row), because every Tui
+// delegate reads Colors.primary. Forced states: down/checked/disabled declaratively;
+// visualFocus via the driver. Focus reuses the hover layer by design.
 Theme {
     id: root
     width: 1180
-    height: 1400
+    height: 1180
 
-    // one labelled cell: caption on top, the control below
     component Cell: ColumnLayout {
         property string cap
         default property alias body: holder.data
         spacing: 3
         Label {
             text: parent.cap
-            color: palette.placeholderText
+            color: Colors.on_surface_variant
             font.pixelSize: 11
-            font.family: Tokens.family
+            font.family: Type.family
         }
         RowLayout { id: holder; spacing: 0 }
     }
 
-    // one control-type row: name on the left, state cells on the right
     component Line: RowLayout {
         property string name
         Layout.fillWidth: true
-        spacing: Tokens.gap
+        spacing: Spacing.gap
         Label {
             text: parent.name
-            color: palette.accent
-            font.pixelSize: Tokens.body
-            font.family: Tokens.family
-            Layout.preferredWidth: 110
+            color: Colors.primary
+            font.pixelSize: Type.body
+            font.family: Type.family
+            Layout.preferredWidth: 120
             Layout.alignment: Qt.AlignTop
         }
     }
@@ -46,40 +45,44 @@ Theme {
         contentWidth: availableWidth
         ColumnLayout {
             width: root.width
-            spacing: Tokens.edge
+            spacing: Spacing.edge
 
             Item { implicitHeight: 4 }
             Label {
-                text: "state matrix · Fusion · one injected palette"
-                color: palette.accent
-                font.pixelSize: Tokens.title
-                Layout.leftMargin: Tokens.edge
+                text: "state matrix · Tui style · M3 tokens"
+                color: Colors.primary
+                font.pixelSize: Type.title
+                Layout.leftMargin: Spacing.edge
             }
 
             ColumnLayout {
-                Layout.leftMargin: Tokens.edge
-                Layout.rightMargin: Tokens.edge
+                Layout.leftMargin: Spacing.edge
+                Layout.rightMargin: Spacing.edge
                 Layout.fillWidth: true
-                spacing: Tokens.edge
+                spacing: Spacing.edge
 
                 Line {
-                    name: "Button"
-                    Cell { cap: "default"; Button { text: "btn" } }
-                    Cell { cap: "pressed"; Button { text: "btn"; down: true } }
-                    Cell { cap: "hover"; Button { objectName: "hoverBtn"; text: "btn" } }
-                    Cell { cap: "focus"; Button { objectName: "focusBtn"; text: "btn" } }
-                    Cell { cap: "accent"; Button { text: "btn"; highlighted: true } }
-                    Cell { cap: "accent·down"; Button { text: "btn"; highlighted: true; down: true } }
+                    name: "Button variant"
+                    Cell { cap: "outline"; Button { text: "btn" } }
+                    Cell { cap: "primary"; Button { text: "btn"; variant: "primary" } }
+                    Cell { cap: "tonal"; Button { text: "btn"; variant: "tonal" } }
+                    Cell { cap: "ghost"; Button { text: "btn"; variant: "ghost" } }
+                    Cell { cap: "danger"; Button { text: "btn"; variant: "danger" } }
+                }
+
+                Line {
+                    name: "Button state"
+                    Cell { cap: "default"; Button { text: "btn"; variant: "primary" } }
+                    Cell { cap: "pressed"; Button { text: "btn"; variant: "primary"; down: true } }
+                    Cell { cap: "focus"; Button { objectName: "focusBtn"; text: "btn"; variant: "primary" } }
                     Cell { cap: "checked"; Button { text: "btn"; checkable: true; checked: true } }
-                    Cell { cap: "flat"; Button { text: "btn"; flat: true } }
-                    Cell { cap: "disabled"; Button { text: "btn"; enabled: false } }
+                    Cell { cap: "disabled"; Button { text: "btn"; variant: "primary"; enabled: false } }
                 }
 
                 Line {
                     name: "CheckBox"
                     Cell { cap: "off"; CheckBox { text: "x" } }
                     Cell { cap: "on"; CheckBox { text: "x"; checked: true } }
-                    Cell { cap: "partial"; CheckBox { text: "x"; tristate: true; checkState: Qt.PartiallyChecked } }
                     Cell { cap: "pressed"; CheckBox { text: "x"; checked: true; down: true } }
                     Cell { cap: "focus"; CheckBox { objectName: "focusCheck"; text: "x"; checked: true } }
                     Cell { cap: "disabled"; CheckBox { text: "x"; checked: true; enabled: false } }
@@ -104,14 +107,6 @@ Theme {
                 }
 
                 Line {
-                    name: "ToolButton"
-                    Cell { cap: "default"; ToolButton { text: "tool" } }
-                    Cell { cap: "pressed"; ToolButton { text: "tool"; down: true } }
-                    Cell { cap: "checked"; ToolButton { text: "tool"; checkable: true; checked: true } }
-                    Cell { cap: "disabled"; ToolButton { text: "tool"; enabled: false } }
-                }
-
-                Line {
                     name: "TextField"
                     Cell { cap: "placeholder"; TextField { placeholderText: "host…"; implicitWidth: 140 } }
                     Cell { cap: "filled"; TextField { text: "home"; implicitWidth: 140 } }
@@ -120,17 +115,11 @@ Theme {
                 }
 
                 Line {
-                    name: "ComboBox"
-                    Cell { cap: "default"; ComboBox { model: ["eco", "perf"]; implicitWidth: 130 } }
-                    Cell { cap: "pressed"; ComboBox { model: ["eco", "perf"]; down: true; implicitWidth: 130 } }
-                    Cell { cap: "editable"; ComboBox { model: ["eco", "perf"]; editable: true; implicitWidth: 130 } }
-                    Cell { cap: "disabled"; ComboBox { model: ["eco", "perf"]; enabled: false; implicitWidth: 130 } }
-                }
-
-                Line {
-                    name: "SpinBox"
-                    Cell { cap: "default"; SpinBox { value: 3; implicitWidth: 130 } }
-                    Cell { cap: "disabled"; SpinBox { value: 3; enabled: false; implicitWidth: 130 } }
+                    name: "ComboBox · SpinBox"
+                    Cell { cap: "combo"; ComboBox { model: ["eco", "perf"]; implicitWidth: 130 } }
+                    Cell { cap: "combo·off"; ComboBox { model: ["eco", "perf"]; enabled: false; implicitWidth: 130 } }
+                    Cell { cap: "spin"; SpinBox { value: 3; implicitWidth: 130 } }
+                    Cell { cap: "spin·off"; SpinBox { value: 3; enabled: false; implicitWidth: 130 } }
                 }
 
                 Line {
@@ -141,22 +130,10 @@ Theme {
                 }
 
                 Line {
-                    name: "RangeSlider"
-                    Cell { cap: "value"; RangeSlider { first.value: 0.25; second.value: 0.75; implicitWidth: 160 } }
-                    Cell { cap: "disabled"; RangeSlider { first.value: 0.25; second.value: 0.75; enabled: false; implicitWidth: 160 } }
-                }
-
-                Line {
                     name: "ProgressBar"
                     Cell { cap: "value"; ProgressBar { value: 0.62; implicitWidth: 160 } }
                     Cell { cap: "indeterminate"; ProgressBar { indeterminate: true; implicitWidth: 160 } }
                     Cell { cap: "disabled"; ProgressBar { value: 0.62; enabled: false; implicitWidth: 160 } }
-                }
-
-                Line {
-                    name: "Dial"
-                    Cell { cap: "value"; Dial { value: 0.3; implicitWidth: 56; implicitHeight: 56 } }
-                    Cell { cap: "disabled"; Dial { value: 0.3; enabled: false; implicitWidth: 56; implicitHeight: 56 } }
                 }
 
                 Line {
@@ -169,16 +146,16 @@ Theme {
 
                 ColumnLayout {
                     spacing: 3
-                    Label { text: "TabBar"; color: palette.accent; font.pixelSize: Tokens.body }
+                    Label { text: "TabBar"; color: Colors.primary; font.pixelSize: Type.body }
                     TabBar {
                         implicitWidth: 420
                         TabButton { text: "current" }
                         TabButton { text: "other" }
-                        TabButton { text: "disabled"; enabled: false }
+                        TabButton { text: "third" }
                     }
                 }
             }
-            Item { implicitHeight: Tokens.edge }
+            Item { implicitHeight: Spacing.edge }
         }
     }
 }

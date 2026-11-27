@@ -1,3 +1,8 @@
 module theme
-singleton Tokens Tokens.qml
+singleton Colors Colors.qml
+singleton Motion Motion.qml
+singleton Shape Shape.qml
+singleton Spacing Spacing.qml
+singleton States States.qml
+singleton Type Type.qml
 Theme Theme.qml
