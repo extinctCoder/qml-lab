@@ -3,10 +3,12 @@ import QtQuick.Layouts
 import theme
 import services
 
-// The top bar — the first real shell panel. It only reads services and reports
-// clicks; it never knows the values are simulated.
+// The top bar. It only reads services and reports clicks; it never knows the
+// values are simulated. Clicking the status cluster asks for quick settings.
 Rectangle {
     id: bar
+
+    signal quickSettings()
 
     implicitHeight: 34
     color: Colors.surface_container
@@ -21,7 +23,7 @@ Rectangle {
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: Spacing.gap
-        anchors.rightMargin: Spacing.gap
+        anchors.rightMargin: Spacing.tight
         spacing: Spacing.gap
 
         // ── workspaces (left) ───────────────────────────────────────────
@@ -68,28 +70,45 @@ Rectangle {
 
         Item { Layout.fillWidth: true }
 
-        // ── status (right) ──────────────────────────────────────────────
-        Row {
-            spacing: Spacing.gap
+        // ── status (right) — opens quick settings ───────────────────────
+        MouseArea {
+            id: statusArea
+            Layout.preferredWidth: statusRow.implicitWidth + Spacing.gap * 2
+            Layout.fillHeight: true
+            hoverEnabled: true
+            onClicked: bar.quickSettings()
 
-            Text {
-                text: Network.connected ? Network.ssid : (Network.enabled ? "…" : "offline")
-                color: Colors.on_surface_variant
-                font.family: Type.family
-                font.pixelSize: Type.label
+            Rectangle {
+                anchors.fill: parent
+                color: Colors.on_surface
+                opacity: statusArea.pressed ? States.pressed : statusArea.containsMouse ? States.hover : 0
+                Behavior on opacity { NumberAnimation { duration: Motion.small } }
             }
-            Text {
-                text: Audio.muted ? "muted" : "vol " + Audio.volume
-                color: Colors.on_surface_variant
-                font.family: Type.family
-                font.pixelSize: Type.label
-            }
-            Text {
-                visible: Power.has_battery
-                text: Power.battery + "%" + (Power.charging ? "+" : "")
-                color: Power.battery <= 15 ? Colors.warning : Colors.on_surface_variant
-                font.family: Type.family
-                font.pixelSize: Type.label
+
+            Row {
+                id: statusRow
+                anchors.centerIn: parent
+                spacing: Spacing.gap
+
+                Text {
+                    text: Network.connected ? Network.ssid : (Network.enabled ? "…" : "offline")
+                    color: Colors.on_surface_variant
+                    font.family: Type.family
+                    font.pixelSize: Type.label
+                }
+                Text {
+                    text: Audio.muted ? "muted" : "vol " + Audio.volume
+                    color: Colors.on_surface_variant
+                    font.family: Type.family
+                    font.pixelSize: Type.label
+                }
+                Text {
+                    visible: Power.has_battery
+                    text: Power.battery + "%" + (Power.charging ? "+" : "")
+                    color: Power.battery <= 15 ? Colors.warning : Colors.on_surface_variant
+                    font.family: Type.family
+                    font.pixelSize: Type.label
+                }
             }
         }
     }

@@ -1,9 +1,7 @@
 import QtQuick
 import theme
 
-// The shell surface — what renders on the screen: a wallpaper with the bar on
-// top. Sized to the screen it's placed in. Panels (quick settings, launcher,
-// notifications) will be added over this.
+// The shell surface — wallpaper, the bar, and the panels that drop from it.
 Item {
     id: shell
 
@@ -15,9 +13,26 @@ Item {
         }
     }
 
+    // click anywhere outside an open panel to dismiss it
+    MouseArea {
+        anchors.fill: parent
+        enabled: quick.open
+        onClicked: quick.open = false
+    }
+
     Bar {
+        id: bar
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        onQuickSettings: quick.open = !quick.open
+    }
+
+    QuickSettings {
+        id: quick
+        anchors.top: bar.bottom
+        anchors.right: parent.right
+        anchors.topMargin: Spacing.inner
+        anchors.rightMargin: Spacing.inner
     }
 }
