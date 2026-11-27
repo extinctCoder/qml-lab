@@ -6,6 +6,7 @@ QtObject {
     property string orientation: "row"
     property bool selects: true
     property var members: []
+    property Item entry: null
 
     readonly property Item stop: {
         for (const m of members)
@@ -26,6 +27,12 @@ QtObject {
     function join(member) {
         if (members.indexOf(member) < 0)
             members = members.concat([member]);
+    }
+
+    function enter() {
+        if (stop)
+            stop.forceActiveFocus();
+        return stop !== null;
     }
 
     function leave(member) {
@@ -65,6 +72,8 @@ QtObject {
         let target = null;
         if (key === next)
             target = step(from, 1);
+        else if (key === back && entry && edge(false) === from)
+            target = entry;
         else if (key === back)
             target = step(from, -1);
         else if (key === Qt.Key_Home)
@@ -73,7 +82,9 @@ QtObject {
             target = edge(true);
         else
             return false;
-        if (target && target !== from) {
+        if (target && target === entry) {
+            entry.forceActiveFocus();
+        } else if (target && target !== from) {
             target.forceActiveFocus();
             if (selects)
                 target.activated();

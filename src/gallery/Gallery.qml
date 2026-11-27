@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import theme
 import components.ui
@@ -8,6 +10,7 @@ import components.ui.section as Section
 import components.ui.feedback as Feedback
 import components.ui.range as Range
 import components.ui.tabs as Tabs
+import components.ui.field as Field
 import components.behaviors
 
 Rectangle {
@@ -30,6 +33,18 @@ Rectangle {
     property real discord: 20
     property real position: 84
     property int tab: 0
+    property string network: "home"
+    property string query: "ze"
+    property string password: "correct horse"
+    property string launched: ""
+    readonly property var apps: [
+        { name: "zen browser", kind: "web browser" },
+        { name: "zed", kind: "editor" },
+        { name: "ghostty", kind: "terminal" },
+        { name: "spotify", kind: "music" },
+        { name: "thunar", kind: "files" }
+    ]
+    readonly property var matches: apps.filter(a => a.name.indexOf(query.trim().toLowerCase()) >= 0)
 
     Flickable {
         id: scroller
@@ -947,6 +962,114 @@ Rectangle {
                             easing.type: Motion.ease_out
                         }
                     }
+                }
+            }
+
+            Text.Mono {
+                text: "9 · Field"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Basic · one line · Enter submits · Esc clears, then leaves"
+                size: "label"
+                muted: true
+            }
+            Field.Basic {
+                width: 420
+                text: gallery.network
+                placeholder: "name this network"
+                onEdited: text => gallery.network = text
+                onSubmitted: text => console.log("saved:", text)
+            }
+
+            Text.Mono {
+                text: "Search · × clears · ↓ moves into the results, ↑ from the first comes back · Enter launches the first"
+                size: "label"
+                muted: true
+            }
+            Column {
+                width: 420
+                spacing: Spacing.tight
+                Field.Search {
+                    id: search
+                    width: parent.width
+                    text: gallery.query
+                    placeholder: "search apps…"
+                    label: gallery.matches.length + (gallery.matches.length === 1 ? " result" : " results")
+                    list: results
+                    onEdited: text => gallery.query = text
+                    onSubmitted: if (gallery.matches.length > 0)
+                        gallery.launched = gallery.matches[0].name
+                }
+                Surface {
+                    width: parent.width
+                    padding_x: 0
+                    padding_y: Spacing.tight
+                    Column {
+                        width: parent.width
+                        Roving {
+                            id: results
+                            orientation: "column"
+                            selects: false
+                            entry: search
+                        }
+                        Repeater {
+                            model: gallery.matches
+                            Button.ListItem {
+                                required property var modelData
+                                icon: "▣"
+                                title: modelData.name
+                                description: modelData.kind
+                                roving: results
+                                onClicked: gallery.launched = modelData.name
+                            }
+                        }
+                        Feedback.Empty {
+                            visible: gallery.matches.length === 0
+                            compact: true
+                            icon: "⌕"
+                            title: "no apps match"
+                        }
+                    }
+                }
+                Text.Mono {
+                    visible: gallery.launched !== ""
+                    text: "launched: " + gallery.launched
+                    size: "label"
+                    muted: true
+                }
+            }
+
+            Text.Mono {
+                text: "Password · hidden · the eye shows it"
+                size: "label"
+                muted: true
+            }
+            Field.Password {
+                width: 420
+                text: gallery.password
+                placeholder: "password for office-5g"
+                onEdited: text => gallery.password = text
+            }
+
+            Text.Mono {
+                text: "error · disabled"
+                size: "label"
+                muted: true
+            }
+            Row {
+                spacing: Spacing.gap
+                Field.Password {
+                    width: 204
+                    text: "hunter2"
+                    error: "wrong password"
+                }
+                Field.Basic {
+                    width: 204
+                    text: "home"
+                    enabled: false
                 }
             }
         }
