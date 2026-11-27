@@ -25,11 +25,11 @@ ships the machine, so building one was redundant.
 lib/theme/        M3 tokens: Colors, States, Shape, Spacing, Motion, Type + Theme.qml (root wrapper)
 lib/Tui/          the style — one delegate per Qt Quick Control, rooted on T.<Type>, reads the tokens
 lib/primitives/   things Qt has no control for: Divider, Keycap, Avatar, Combo, Image — plain Items, same tokens
-gallery/          the showcase + state/popup harnesses; dev.py runs it with live reload
+gallery/          the showcase + state/popup harnesses; `make run` shows it (native qml)
 ```
 
 The library modules (`theme`, `Tui`, `primitives`) live under `lib/`, which is
-the QML import path; `dev.py` and the shell add `lib/` so `import theme` resolves.
+the QML import path; the Makefile (`-I lib`) and the shell add it so `import theme` resolves.
 
 A Tui delegate imports `theme` and `QtQuick.Templates`, never `QtQuick.Controls`
 — so it cannot recurse into itself.

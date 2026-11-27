@@ -45,7 +45,7 @@ The shell runs only on seraphpc (EndeavourOS + Hyprland): Quickshell is Linux an
 2. **Create the config folder.** Quickshell looks for `~/.config/quickshell/shell.qml` as the default config, or one config per subfolder (`~/.config/quickshell/<name>/shell.qml`, started with `qs -c <name>`). Any other folder can be run with `qs -p <path>` ([introduction](https://quickshell.org/docs/v0.3.2/guide/introduction/)).
 3. **Make qml-lab importable.** The shell needs `theme`, `Tui` and `primitives` from the qml-lab repo, and the Tui style selected (`QQuickStyle.setStyle("Tui")`). How exactly is an open question (below); the repo itself stays the single source of the library.
 4. **Turn on the language server.** An empty `.qmlls.ini` next to `shell.qml` is replaced by Quickshell with a managed qmlls config; it stays out of git, since its content differs per machine.
-5. **Work with live reload.** Quickshell reloads the shell whenever a file is saved, the same loop as `dev.py` on the Mac.
+5. **Work with live reload.** Quickshell reloads the shell whenever a file is saved, the same loop as `qmlpreview` (`make watch`) on the Mac.
 6. **Start it with Hyprland**: `exec-once = qs` in the Hyprland config, once the bar works.
 
 ## Services
@@ -110,7 +110,7 @@ Every service gets a simulated twin with the same contract, so every panel is bu
 ```mermaid
 flowchart TB
     panels["<b>Panels</b><br/>pure QtQuick content: bar, quick settings, launcher<br/>import services, never sim"]
-    sim["<b>sim/</b> on the Mac<br/>dev.py, lab.qml and the automated tests<br/>plain QtQuick: actions change values"]
+    sim["<b>sim/</b> on the Mac<br/>qml/qmlpreview, lab.qml and the automated tests<br/>plain QtQuick: actions change values"]
     real["<b>services/</b> on seraphpc<br/>the running shell, inside Quickshell<br/>Quickshell modules, commands, /proc"]
     scenario["Scenario and the lab's controls"]
     system["The system on seraphpc"]
@@ -120,7 +120,7 @@ flowchart TB
     system -- "real state and events" --> real
 ```
 
-**How the set is picked.** `services/` and `sim/` both declare the module `services`. The Mac (`dev.py`, `lab.qml`, the tests) puts `sim/` on the import path; seraphpc puts `services/` there. Nothing else changes.
+**How the set is picked.** `services/` and `sim/` both declare the module `services`. The Mac (`make run`, `lab.qml`, the tests) puts `sim/` on the import path; seraphpc puts `services/` there. Nothing else changes.
 
 **What a simulated service is.** A plain QtQuick singleton with the contract's values as properties. Its actions change them as the real system would: `set_volume(60)` sets `volume` to 60, and `connect(ssid, "hunter2")` sets `error` to "wrong password". Values that move on their own (CPU, a playing track) follow a timer.
 
@@ -214,7 +214,7 @@ Every milestone follows the same order: contract, then simulation, then panel on
 - [ ] Settle how the shell imports qml-lab (open question 1), and where the shell's code lives (open question 2)
 - [ ] Create the shell tree, with an empty `shell.qml` showing one `Text.Mono` in a bar
 - [ ] Add `.qmlls.ini`, and confirm saving a file reloads the bar
-- [ ] Make `lab.qml` run on the Mac with `dev.py`, on an empty `sim/`
+- [ ] Make `lab.qml` run on the Mac with `make lab`, on an empty `sim/`
 
 **1 · Minimal bar**
 
@@ -265,7 +265,7 @@ The same rules that built the library carry over to the shell.
 - **Docs before memory.** Every Quickshell or Hyprland detail is checked against the official docs for the installed version (v0.3.2 today) before it's used.
 - **Tested before it reaches you.** Lint clean (`qmllint`), and behavior tests for anything interactive. For refactors, a snapshot of every visible text and box must match before and after.
 - **One step at a time.** Each step is small enough to try, review and push before the next starts.
-- **Two machines.** The Mac keeps the library and the gallery (`dev.py`); seraphpc runs the shell with Quickshell's live reload. A fix to a component lands in qml-lab first, then the shell picks it up.
+- **Two machines.** The Mac keeps the library and the gallery (`make run`, native Qt); seraphpc runs the shell with Quickshell's live reload. A fix to a component lands in qml-lab first, then the shell picks it up.
 - **The library stays system-agnostic.** Nothing in `components/` ever names Wi-Fi, PipeWire or a command; that lives only in the shell's `services/`.
 
 ## Open questions

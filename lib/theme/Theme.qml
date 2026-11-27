@@ -14,5 +14,7 @@ Pane {
     font.family: Type.family
     font.pixelSize: Type.body
 
-    background: Rectangle { color: Colors.surface }
+    background: Rectangle {
+        color: Colors.surface
+    }
 }
