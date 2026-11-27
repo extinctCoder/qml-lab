@@ -126,6 +126,10 @@ A 4 px grid, four steps:
    `↗` opens something else (an app, a tool).
 6. **Keys:** Enter activates, Space toggles. Things that hold a value
    (toggles, switches, radios) react to Space only. Tab moves focus.
+   A **group** (tabs, a radio list, segmented buttons, a check list) is a
+   single Tab stop: the arrows move inside it, Home and End jump to its ends,
+   and Tab leaves it. In tabs, radios and segmented buttons, moving also
+   selects; in a check list, it only moves, and Space toggles.
 7. **Selection never relies on color alone**: every on/off state also changes
    shape or position (a filled radio, a filled check, a switch's thumb).
 
@@ -141,6 +145,8 @@ The library is built bottom-up. Each family is a folder; what it offers:
 | `button`   | `Basic`, `ListItem`, `Tile`             | everything you press: a button, a list row, a tile     |
 | `section`  | `Basic`                                 | a box whose header folds its content open and closed  |
 | `feedback` | `Empty`, `Loading`, `Error`             | what's shown when there's nothing (yet) to show        |
+| `range`    | `Basic`, `Slider`, `Progress`, `Steps`, `Ring`, `Seek` | a value between a minimum and a maximum |
+| `tabs`     | `Basic`                                 | switching between views of the same place              |
 
 ### Surface
 
@@ -178,6 +184,30 @@ and **compact** (one line, actions at the far right).
 
 A positive empty state says so: "all caught up", not "no notifications".
 
+### Ranges
+
+A value between a minimum and a maximum, drawn as a **block bar**: a track,
+and the filled part in the accent. Every kind shares the same colors, 2 px
+corners and square ends, and the same row: an icon or a title on the left,
+a label on the right. Rows in a list share a `title_width`, so their bars
+line up like columns.
+
+| Kind     | Shows                                   | Where                              |
+| -------- | --------------------------------------- | ---------------------------------- |
+| Basic    | a value, read-only                      | battery, cpu, memory               |
+| Slider   | a value you can change (drag, click, ← →) | volume, brightness, per-app volume |
+| Progress | how far work has got, or a moving stripe when unknown | updates, scanning, countdowns |
+| Steps    | a few rising bars                       | signal, levels in the bar          |
+| Ring     | the bar bent into a circle              | dashboard gauges                   |
+| Seek     | a slider in seconds (`m:ss`), with what's loaded | media position            |
+
+### Tabs
+
+Tabs switch between views of the same place. The active tab's word is bright,
+the others muted, and a 2 px accent line under the active word slides to the
+new tab. The bar is one Tab stop; the arrows select. Showing the view is the
+owner's job.
+
 ## States (every interactive component)
 
 | State          | Look                                                         |
@@ -208,7 +238,7 @@ In code, every animation uses `Glide` (numbers) or `ColorGlide` (colors) from
 
 ```
 theme/                tokens: Colors, Type, Spacing, Shape, Motion, States
-components/behaviors/ how things react: Interactive, Glide, ColorGlide
+components/behaviors/ how things react: Interactive, Roving, Glide, ColorGlide
 components/ui/        Surface, and one folder per family
 gallery/              every component in its variants and states (fake data)
 ```
@@ -234,6 +264,8 @@ The rules every family follows:
    a component.
 7. **Never name a type after a built-in QML type** (`Row`, `Text`, `State`…):
    inside its own folder, the built-in wins.
+8. **Groups move with the arrows.** Anything with an `Interactive` can join a
+   `Roving` group; the group keeps one Tab stop and handles the arrows.
 
 ## Naming
 
