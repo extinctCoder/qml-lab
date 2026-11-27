@@ -84,6 +84,11 @@ Theme {
                         checked: Bluetooth.enabled
                         onToggled: Bluetooth.set_enabled(checked)
                     }
+                    Switch {
+                        text: "lock screen"
+                        checked: Session.locked
+                        onToggled: checked ? Session.lock() : Session.unlock("")
+                    }
 
                     Item { Layout.fillHeight: true; Layout.preferredHeight: Spacing.gap }
 

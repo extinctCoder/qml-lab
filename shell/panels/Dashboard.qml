@@ -74,7 +74,8 @@ ColumnLayout {
                 }
                 Card {
                     title: "weather"
-                    Label { text: "—"; color: Colors.on_surface; font.family: Type.family }
+                    Label { text: Weather.temp + "° · " + Weather.condition; color: Colors.on_surface; font.family: Type.family }
+                    Label { text: Weather.location + " · H" + Weather.high + " L" + Weather.low; color: Colors.on_surface_variant; font.family: Type.family; font.pixelSize: Type.label }
                 }
                 Card {
                     title: "system"
@@ -101,7 +102,10 @@ ColumnLayout {
         }
         // ── weather ─────────────────────────────────────────────────────
         ColumnLayout {
-            Label { text: "weather — coming soon"; color: Colors.on_surface_variant; font.family: Type.family }
+            spacing: Spacing.inner
+            Label { text: Weather.temp + "°"; color: Colors.on_surface; font.family: Type.family; font.pixelSize: Type.display }
+            Label { text: Weather.condition; color: Colors.on_surface_variant; font.family: Type.family; font.pixelSize: Type.title }
+            Label { text: Weather.location + " · high " + Weather.high + "° · low " + Weather.low + "°"; color: Colors.on_surface_variant; font.family: Type.family }
             Item { Layout.fillHeight: true }
         }
     }

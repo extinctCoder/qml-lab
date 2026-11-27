@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import services
 
 // The shell surface — wallpaper, the bar, and the panels that drop from it.
 Item {
@@ -53,6 +54,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        visible: !Session.locked
         onControlCenter: { activities.open = false; cc.open = !cc.open }
         onOverview: { cc.open = false; activities.open = true }
     }
@@ -63,5 +65,22 @@ Item {
         anchors.right: parent.right
         anchors.topMargin: Spacing.inner
         anchors.rightMargin: Spacing.inner
+    }
+
+    // the lockscreen covers everything, bar included
+    LockScreen {
+        id: lockScreen
+        anchors.fill: parent
+        backdrop: wallpaper
+    }
+
+    Connections {
+        target: Session
+        function onLockedChanged() {
+            if (Session.locked) {
+                cc.open = false
+                activities.open = false
+            }
+        }
     }
 }

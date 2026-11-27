@@ -6,4 +6,6 @@ singleton Network Network.qml
 singleton Bluetooth Bluetooth.qml
 singleton Display Display.qml
 singleton Workspaces Workspaces.qml
+singleton Weather Weather.qml
+singleton Session Session.qml
 singleton Scenario Scenario.qml

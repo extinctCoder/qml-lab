@@ -86,7 +86,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Item { Layout.fillWidth: true }
         Button { text: "settings"; variant: "ghost" }
-        Button { text: "lock"; variant: "ghost" }
+        Button { text: "lock"; variant: "ghost"; onClicked: Session.lock() }
         Button { text: "power"; variant: "danger" }
     }
 }
