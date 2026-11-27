@@ -38,6 +38,14 @@ Base {
                 }
             }
 
+            StateLayer {
+                anchors.fill: parent
+                anchors.margins: Shape.border
+                radius: Shape.radius
+                current: header_input.current
+                pressed: header_input.pressed
+            }
+
             Strip {
                 anchors.fill: parent
                 anchors.leftMargin: Spacing.inner
@@ -89,6 +97,7 @@ Base {
             }
 
             Interactive {
+                id: header_input
                 anchors.fill: parent
                 exclude: root.checkable ? switch_box : null
                 z: -1

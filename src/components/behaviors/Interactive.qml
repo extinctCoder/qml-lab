@@ -1,11 +1,13 @@
 import QtQuick
-import theme
 
+// The one input behaviour: it draws NOTHING. It handles pointer and keyboard
+// (tap, Enter/Space, roving arrows, click-exclusion) and reports the state the
+// view should show — `current` (hovered, highlighted or keyboard-focused: one
+// state) and `pressed`. A StateLayer, owned by Surface or placed beside a
+// non-Surface view, renders those. Looks live in one place; input lives here.
 Item {
     id: root
 
-    property color tint: Colors.on_surface
-    property int radius: Shape.radius
     property bool checkable: false
     property bool checked: false
     property var keys: checkable ? ["space"] : ["enter", "space"]
@@ -15,6 +17,7 @@ Item {
     property bool focusable: true
     readonly property bool hovered: hover.hovered
     readonly property bool pressed: tap.pressed && !tap.on_excluded
+    readonly property bool current: hovered || highlighted || activeFocus
 
     signal activated
 
@@ -36,31 +39,6 @@ Item {
         activated()
     Keys.onSpacePressed: if (keys.includes("space"))
         activated()
-
-    Rectangle {
-        anchors.fill: parent
-        radius: root.radius
-        color: root.tint
-        opacity: root.pressed ? States.pressed : root.hovered || root.highlighted ? States.hover : 0
-
-        Behavior on opacity {
-            Glide {}
-        }
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        anchors.margins: -(Shape.focus + 1)
-        radius: root.radius + Shape.focus
-        color: "transparent"
-        border.width: Shape.focus
-        border.color: Colors.primary
-        opacity: root.activeFocus ? 1 : 0
-
-        Behavior on opacity {
-            Glide {}
-        }
-    }
 
     HoverHandler {
         id: hover

@@ -9,7 +9,10 @@ Rectangle {
     property color fill: level_color
     property color line: Colors.outline_variant
     property bool selected: false
-    property string emphasis: "none"
+    property bool invalid: false
+    property bool current: false
+    property bool pressed: false
+    property color tint: Colors.on_surface
     property int padding_x: Spacing.inner
     property int padding_y: Spacing.inner
     default property alias content: area.data
@@ -22,12 +25,20 @@ Rectangle {
     readonly property int pad_y: appearance === "none" ? 0 : padding_y
 
     color: !enabled ? (shows_fill || selected ? States.disabled_fill : "transparent") : selected ? Colors.secondary_container : shows_fill ? fill : "transparent"
-    border.width: emphasis !== "none" ? Shape.focus : appearance === "outlined" ? Shape.border : 0
-    border.color: !enabled ? States.disabled_fill : emphasis === "error" ? Colors.error : emphasis === "focus" || selected ? Colors.primary : line
+    border.width: invalid ? Shape.focus : appearance === "outlined" ? Shape.border : 0
+    border.color: !enabled ? States.disabled_fill : invalid ? Colors.error : selected ? Colors.primary : line
     radius: Shape.radius
 
     implicitWidth: area.children.reduce((w, c) => c.visible ? Math.max(w, c.implicitWidth) : w, 0) + pad_x * 2
     implicitHeight: area.children.reduce((h, c) => c.visible ? Math.max(h, c.implicitHeight) : h, 0) + pad_y * 2
+
+    StateLayer {
+        anchors.fill: parent
+        radius: root.radius
+        current: root.current
+        pressed: root.pressed
+        tint: root.tint
+    }
 
     Item {
         id: area

@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.ui
 import components.behaviors
 
 Linear {
@@ -9,6 +10,14 @@ Linear {
     signal moved(real value)
 
     bar.clip: false
+
+    StateLayer {
+        parent: root.bar
+        anchors.fill: parent
+        radius: Shape.radius
+        current: interactive.current
+        pressed: interactive.pressed
+    }
 
     function snapped(v) {
         const s = step > 0 ? Math.round((v - from) / step) * step + from : v;

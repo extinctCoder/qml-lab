@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.ui
 import components.behaviors
 import components.ui.text as Text
 
@@ -26,12 +27,20 @@ Item {
         }
     }
 
+    StateLayer {
+        anchors.fill: parent
+        radius: Shape.radius
+        tint: label.color
+        current: tab_input.current
+        pressed: tab_input.pressed
+    }
+
     Interactive {
+        id: tab_input
         anchors.fill: parent
         checkable: true
         checked: root.active
         keys: ["enter", "space"]
-        tint: label.color
         roving: root.roving
         onActivated: root.clicked()
     }

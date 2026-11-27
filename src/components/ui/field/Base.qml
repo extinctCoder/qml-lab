@@ -35,8 +35,9 @@ FocusScope {
         height: editor.implicitHeight + Spacing.inner * 2
         padding_x: 0
         padding_y: 0
-        line: hover.hovered ? Colors.outline : Colors.outline_variant
-        emphasis: root.error !== "" ? "error" : editor.activeFocus ? "focus" : "none"
+        line: Colors.outline_variant
+        invalid: root.error !== ""
+        current: editor.activeFocus || hover.hovered
 
         Behavior on border.color {
             ColorGlide {}

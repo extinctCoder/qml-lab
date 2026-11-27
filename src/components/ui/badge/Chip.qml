@@ -23,6 +23,8 @@ Surface {
 
     appearance: "outlined"
     selected: checkable && checked
+    current: chip_input.current
+    pressed: chip_input.pressed
     padding_x: Spacing.tight + 2
     padding_y: 1
 
@@ -68,8 +70,8 @@ Surface {
     }
 
     Interactive {
+        id: chip_input
         anchors.fill: parent
-        tint: Colors.on_surface
         exclude: root.removable ? remove_btn : null
         onActivated: root.clicked()
     }
