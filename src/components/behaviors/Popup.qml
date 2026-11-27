@@ -29,6 +29,39 @@ FocusScope {
         closed();
     }
 
+    property Item last_inside: null
+
+    function contains_item(item) {
+        for (let it = item; it; it = it.parent)
+            if (it === holder)
+                return true;
+        return false;
+    }
+
+    function focus_moved(item) {
+        if (!opened || !item)
+            return;
+        if (contains_item(item)) {
+            last_inside = item;
+            return;
+        }
+        const forward = !last_inside || last_inside.nextItemInFocusChain(true) === item;
+        const from = opener;
+        close();
+        if (from) {
+            const next = from.nextItemInFocusChain(forward);
+            if (next)
+                next.forceActiveFocus(forward ? Qt.TabFocusReason : Qt.BacktabFocusReason);
+        }
+    }
+
+    Connections {
+        target: root.overlay ? root.overlay.Window.window : null
+        function onActiveFocusItemChanged() {
+            root.focus_moved(root.overlay.Window.activeFocusItem);
+        }
+    }
+
     function inside(x, y) {
         return x >= holder.x && x <= holder.x + holder.width && y >= holder.y && y <= holder.y + holder.height;
     }
