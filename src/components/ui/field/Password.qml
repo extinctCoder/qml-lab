@@ -1,5 +1,7 @@
 import QtQuick
-import components.ui.button as Button
+import theme
+import components.behaviors
+import components.ui.mark as Mark
 
 Base {
     id: root
@@ -9,9 +11,21 @@ Base {
     icon: "⚿"
     secret: !shown
 
-    Button.Basic {
-        variant: "ghost"
-        text: root.shown ? "◎ hide" : "◉ show"
-        onClicked: root.shown = !root.shown
+    Item {
+        width: eye.implicitWidth + Spacing.inner * 2
+        height: eye.implicitHeight + Spacing.tight * 2
+
+        Mark.Eye {
+            id: eye
+            anchors.centerIn: parent
+            on: root.shown
+        }
+
+        Interactive {
+            anchors.fill: parent
+            checkable: true
+            checked: root.shown
+            onActivated: root.shown = !root.shown
+        }
     }
 }

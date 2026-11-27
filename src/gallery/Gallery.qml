@@ -262,7 +262,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Switch · Choice radio · Choice check · Chevron · Spinner · click to flip them"
+                text: "Switch · Choice radio · Choice check · Chevron · Spinner · Eye · click to flip them"
                 size: "label"
                 muted: true
             }
@@ -290,6 +290,10 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Mark.Spinner {
+                    on: marks.flipped
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Mark.Eye {
                     on: marks.flipped
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -1043,7 +1047,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Password · hidden · the eye shows it"
+                text: "Password · hidden · the eye shows it (click, or Tab to it and Space)"
                 size: "label"
                 muted: true
             }
@@ -1055,7 +1059,18 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "error · disabled"
+                text: "error · still editable, so you can fix it"
+                size: "label"
+                muted: true
+            }
+            Field.Password {
+                width: 420
+                text: "hunter2"
+                error: "wrong password"
+            }
+
+            Text.Mono {
+                text: "disabled · can't be focused or edited"
                 size: "label"
                 muted: true
             }
@@ -1064,7 +1079,7 @@ Rectangle {
                 Field.Password {
                     width: 204
                     text: "hunter2"
-                    error: "wrong password"
+                    enabled: false
                 }
                 Field.Basic {
                     width: 204
