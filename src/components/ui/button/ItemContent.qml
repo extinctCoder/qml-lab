@@ -1,9 +1,10 @@
 import QtQuick
 import theme
+import components.ui
 import components.ui.text as Text
 import components.ui.mark as Mark
 
-Item {
+Strip {
     id: root
 
     property string mark: ""
@@ -16,20 +17,15 @@ Item {
     property bool switch_on: false
 
     width: parent ? parent.width : implicitWidth
-    implicitWidth: lead.implicitWidth + Spacing.gap + (show_switch ? switch_mark.implicitWidth : meta_text.implicitWidth)
-    implicitHeight: Math.max(lead.implicitHeight, meta_text.implicitHeight)
+    gap: Spacing.gap
 
-    Row {
-        id: lead
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: Spacing.inner
-
+    leading: [
         Mark.Choice {
             visible: root.mark !== ""
             anchors.verticalCenter: parent.verticalCenter
             kind: root.mark
             on: root.marked
-        }
+        },
         Text.Header {
             anchors.verticalCenter: parent.verticalCenter
             icon: root.icon
@@ -37,23 +33,20 @@ Item {
             description: root.description
             title_size: "body"
         }
-    }
+    ]
 
-    Mark.Switch {
-        id: switch_mark
-        visible: root.show_switch
-        on: root.switch_on
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-    }
-
-    Text.Mono {
-        id: meta_text
-        visible: root.meta !== "" && !root.show_switch
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        text: root.meta
-        size: "label"
-        muted: true
-    }
+    trailing: [
+        Mark.Switch {
+            visible: root.show_switch
+            anchors.verticalCenter: parent.verticalCenter
+            on: root.switch_on
+        },
+        Text.Mono {
+            visible: root.meta !== "" && !root.show_switch
+            anchors.verticalCenter: parent.verticalCenter
+            text: root.meta
+            size: "label"
+            muted: true
+        }
+    ]
 }

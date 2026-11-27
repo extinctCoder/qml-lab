@@ -1,6 +1,6 @@
 import QtQuick
 import theme
-import components.behaviors
+import components.ui.button as Button
 import components.ui.mark as Mark
 
 Base {
@@ -11,21 +11,13 @@ Base {
     icon: "⚿"
     secret: !shown
 
-    Item {
-        width: eye.implicitWidth + Spacing.inner * 2
-        height: eye.implicitHeight + Spacing.tight * 2
+    Button.Mark {
+        checkable: true
+        checked: root.shown
+        onClicked: root.shown = !root.shown
 
         Mark.Eye {
-            id: eye
-            anchors.centerIn: parent
             on: root.shown
-        }
-
-        Interactive {
-            anchors.fill: parent
-            checkable: true
-            checked: root.shown
-            onActivated: root.shown = !root.shown
         }
     }
 }

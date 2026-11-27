@@ -23,11 +23,7 @@ Item {
         id: button
         anchors.fill: parent
         variant: "outline"
-        onClicked: {
-            list.query = "";
-            list.highlight_title(root.current);
-            popup.open(button);
-        }
+        onClicked: popup.show(button, root.current)
     }
 
     Text.Mono {
@@ -53,30 +49,13 @@ Item {
         rotation: popup.opened ? -90 : 90
     }
 
-    Popup {
+    Drop {
         id: popup
         anchor: button
-
-        Surface {
-            width: Math.max(root.width, 220)
-            level: 5
-            padding_x: Spacing.tight
-            padding_y: Spacing.tight
-
-            Base {
-                id: list
-                width: parent.width
-                focus: true
-                searchable: root.searchable
-                esc_leaves: false
-                list_appearance: "none"
-                rows: root.rows
-                options: root.options
-                onPicked: option => {
-                    popup.close();
-                    root.picked(option);
-                }
-            }
-        }
+        box_width: Math.max(root.width, 220)
+        searchable: root.searchable
+        rows: root.rows
+        options: root.options
+        onPicked: option => root.picked(option)
     }
 }

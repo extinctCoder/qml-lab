@@ -1,3 +1,4 @@
 module components.ui
 
 Surface Surface.qml
+Strip Strip.qml

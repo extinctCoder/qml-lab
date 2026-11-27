@@ -1,8 +1,10 @@
 module components.ui.button
 
 internal Base Base.qml
+internal Rich Rich.qml
 internal ItemContent ItemContent.qml
 
 Basic Basic.qml
 ListItem ListItem.qml
 Tile Tile.qml
+Mark Mark.qml

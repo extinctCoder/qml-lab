@@ -1,6 +1,7 @@
 module components.ui.picker
 
 internal Base Base.qml
+internal Drop Drop.qml
 
 Palette Palette.qml
 Select Select.qml

@@ -51,27 +51,26 @@ FocusScope {
             onTapped: editor.forceActiveFocus()
         }
 
-        Row {
+        Strip {
             id: row
             parent: box
             anchors.fill: parent
             anchors.leftMargin: Spacing.inner + 2
             anchors.rightMargin: Spacing.tight
-            spacing: Spacing.inner
 
-            Text.Mono {
-                id: icon_text
-                visible: root.icon !== ""
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.icon
-                tone: Colors.primary
-            }
+            leading: [
+                Text.Mono {
+                    id: icon_text
+                    visible: root.icon !== ""
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: root.icon
+                    tone: Colors.primary
+                }
+            ]
 
             Item {
                 anchors.verticalCenter: parent.verticalCenter
-                width: row.width - (icon_text.visible ? icon_text.width + row.spacing : 0)
-                       - (trailing_row.width > 0 ? trailing_row.width + row.spacing : 0)
-                       - (label_text.visible ? label_text.width + row.spacing : 0)
+                width: parent.width
                 height: editor.implicitHeight
                 clip: true
 
@@ -143,21 +142,22 @@ FocusScope {
                 }
             }
 
-            Row {
-                id: trailing_row
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 0
-            }
-
-            Text.Mono {
-                id: label_text
-                visible: root.label !== ""
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.label
-                size: "label"
-                muted: true
-                rightPadding: Spacing.tight
-            }
+            trailing: [
+                Row {
+                    id: trailing_row
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 0
+                },
+                Text.Mono {
+                    id: label_text
+                    visible: root.label !== ""
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: root.label
+                    size: "label"
+                    muted: true
+                    rightPadding: Spacing.tight
+                }
+            ]
         }
     }
 

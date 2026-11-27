@@ -1,5 +1,6 @@
 import QtQuick
 import theme
+import components.ui
 import components.ui.text as Text
 import components.ui.mark as Mark
 import components.ui.button as Button
@@ -20,7 +21,7 @@ Item {
     signal secondary_pressed
 
     width: parent ? parent.width : implicitWidth
-    implicitWidth: compact ? line.implicitWidth : Math.max(standard.implicitWidth, 240)
+    implicitWidth: compact ? line.implicitWidth + Spacing.inner + Spacing.tight : Math.max(standard.implicitWidth, 240)
     implicitHeight: compact ? line.implicitHeight + Spacing.inner * 2 : standard.implicitHeight + Spacing.edge * 2
 
     Column {
@@ -97,7 +98,7 @@ Item {
         }
     }
 
-    Item {
+    Strip {
         id: line
         visible: root.compact
         anchors.left: parent.left
@@ -105,49 +106,45 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: Spacing.inner
         anchors.rightMargin: Spacing.tight
-        implicitWidth: lead.implicitWidth + Spacing.gap + trailing.implicitWidth + Spacing.inner + Spacing.tight
-        implicitHeight: Math.max(lead.implicitHeight, trailing.implicitHeight)
+        gap: Spacing.gap
 
-        Row {
-            id: lead
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: Spacing.inner
-
+        leading: [
             Text.Mono {
                 visible: !root.busy && root.icon !== ""
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.icon
                 tone: root.tone
-            }
+            },
             Mark.Spinner {
                 visible: root.busy
                 anchors.verticalCenter: parent.verticalCenter
                 on_color: root.tone
-            }
+            },
             Text.Mono {
                 anchors.verticalCenter: parent.verticalCenter
                 text: root.title
                 tone: root.tone
             }
-        }
-        Row {
-            id: trailing
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            spacing: 0
+        ]
 
-            Button.Basic {
-                visible: root.primary !== ""
-                variant: "ghost"
-                text: root.primary + " →"
-                onClicked: root.primary_pressed()
+        trailing: [
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 0
+
+                Button.Basic {
+                    visible: root.primary !== ""
+                    variant: "ghost"
+                    text: root.primary + " →"
+                    onClicked: root.primary_pressed()
+                }
+                Button.Basic {
+                    visible: root.secondary !== ""
+                    variant: "ghost"
+                    text: root.secondary + " ↗"
+                    onClicked: root.secondary_pressed()
+                }
             }
-            Button.Basic {
-                visible: root.secondary !== ""
-                variant: "ghost"
-                text: root.secondary + " ↗"
-                onClicked: root.secondary_pressed()
-            }
-        }
+        ]
     }
 }

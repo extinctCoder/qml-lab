@@ -1,7 +1,9 @@
 import QtQuick
 import theme
+import components.ui
 import components.ui.text as Text
 import components.ui.mark as Mark
+import components.ui.button as Button
 import components.behaviors
 
 Base {
@@ -27,7 +29,7 @@ Base {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: Shape.border
-                z: -2                                   // behind the click area, so its hover tint shows
+                z: -2
                 color: root.enabled && root.active ? Colors.secondary_container : "transparent"
                 radius: Shape.radius
 
@@ -36,55 +38,54 @@ Base {
                 }
             }
 
-            Text.Header {
-                id: header
-                x: Spacing.inner
-                anchors.verticalCenter: parent.verticalCenter
-                icon: root.icon
-                title: root.title
-                description: root.description
-            }
+            Strip {
+                anchors.fill: parent
+                anchors.leftMargin: Spacing.inner
+                anchors.rightMargin: root.checkable ? Spacing.inner - Spacing.tight : Spacing.inner
+                spacing: Spacing.inner - Spacing.tight
 
-            Item {
-                id: switch_box
-                visible: root.checkable
-                anchors.right: parent.right
-                anchors.rightMargin: Spacing.inner
-                anchors.verticalCenter: parent.verticalCenter
-                width: root.checkable ? switch_mark.implicitWidth : 0
-                height: switch_mark.implicitHeight
+                leading: [
+                    Text.Header {
+                        id: header
+                        anchors.verticalCenter: parent.verticalCenter
+                        icon: root.icon
+                        title: root.title
+                        description: root.description
+                    }
+                ]
 
-                Mark.Switch {
-                    id: switch_mark
-                    on: root.checked
-                }
-                Interactive {
-                    anchors.fill: parent
-                    anchors.margins: -Spacing.tight
-                    checkable: true
-                    checked: root.checked
-                    onActivated: root.switched()
-                }
-            }
+                trailing: [
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: Spacing.inner
 
-            Row {
-                id: trailing
-                anchors.right: root.checkable ? switch_box.left : parent.right
-                anchors.rightMargin: Spacing.inner
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: Spacing.inner
+                        Text.Mono {
+                            visible: root.meta !== ""
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: root.meta
+                            size: "label"
+                            muted: true
+                        }
+                        Mark.Chevron {
+                            anchors.verticalCenter: parent.verticalCenter
+                            on: root.open
+                        }
+                    },
+                    Button.Mark {
+                        id: switch_box
+                        visible: root.checkable
+                        anchors.verticalCenter: parent.verticalCenter
+                        padding_x: Spacing.tight
+                        padding_y: Spacing.tight
+                        checkable: true
+                        checked: root.checked
+                        onClicked: root.switched()
 
-                Text.Mono {
-                    visible: root.meta !== ""
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: root.meta
-                    size: "label"
-                    muted: true
-                }
-                Mark.Chevron {
-                    anchors.verticalCenter: parent.verticalCenter
-                    on: root.open
-                }
+                        Mark.Switch {
+                            on: root.checked
+                        }
+                    }
+                ]
             }
 
             Interactive {

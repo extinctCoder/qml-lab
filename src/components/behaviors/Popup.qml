@@ -29,6 +29,10 @@ FocusScope {
         closed();
     }
 
+    function inside(x, y) {
+        return x >= holder.x && x <= holder.x + holder.width && y >= holder.y && y <= holder.y + holder.height;
+    }
+
     function place() {
         if (!anchor || !overlay)
             return;
@@ -48,8 +52,13 @@ FocusScope {
         anchors.fill: parent
         enabled: root.opened
         acceptedButtons: Qt.AllButtons
-        onPressed: root.close()
+        onPressed: mouse => {
+            if (!root.inside(mouse.x, mouse.y))
+                root.close();
+        }
         onWheel: wheel => {
+            if (root.inside(wheel.x, wheel.y))
+                return;
             root.close();
             wheel.accepted = false;
         }
