@@ -3,199 +3,128 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import theme
 import services
+import "../panels" as Panels
 
-// The lab: the shell's gallery. Every service shown with Tui controls, fed by the
-// mock spine. The scenario dropdown flips the whole machine — pick `desktop` and
-// the battery, Bluetooth and brightness vanish; pick `laptop` and they return.
-// Controls drive the services back (drag volume → Audio.set_volume), proving the
-// contract both ways. Pure QtQuick: no Quickshell here.
+// The lab: a device emulator. Two parts, deliberately separate —
+//   left  · simulation control: picks the scenario and the screen resolution.
+//           This is the dev harness, NOT the shell; the shell never sees it.
+//   right · the actual shell, rendered in a framed screen at the chosen size
+//           (default 1200×800), scaled to fit the preview area.
 Theme {
-    id: root
-    width: 520
-    height: 720
+    id: lab
+    width: 1360
+    height: 820
 
-    component Section: ColumnLayout {
-        property string title
-        default property alias body: inner.data
-        Layout.fillWidth: true
-        spacing: Spacing.inner
-        Label {
-            text: parent.title
-            color: Colors.primary
-            font.pixelSize: Type.title
-            font.family: Type.family
-        }
-        ColumnLayout { id: inner; Layout.fillWidth: true; spacing: Spacing.inner }
-    }
+    readonly property var resNames: ["1200 × 800", "1366 × 768", "1920 × 1080", "1080 × 1920"]
+    readonly property var resDims: [[1200, 800], [1366, 768], [1920, 1080], [1080, 1920]]
+    property int screenW: 1200
+    property int screenH: 800
 
-    ScrollView {
+    RowLayout {
         anchors.fill: parent
-        contentWidth: availableWidth
+        spacing: 0
 
-        ColumnLayout {
-            width: root.width
-            spacing: Spacing.edge
+        // ── simulation control (dev harness, not the shell) ─────────────
+        Pane {
+            Layout.preferredWidth: 248
+            Layout.fillHeight: true
 
-            Item { implicitHeight: Spacing.tight }
-
-            // ── header: device picker + clock ───────────────────────────────
-            RowLayout {
-                Layout.leftMargin: Spacing.edge
-                Layout.rightMargin: Spacing.edge
-                Layout.fillWidth: true
-                spacing: Spacing.gap
+            ScrollView {
+                anchors.fill: parent
+                contentWidth: availableWidth
 
                 ColumnLayout {
-                    spacing: 0
-                    Label { text: "lab · " + Scenario.current; color: Colors.primary; font.pixelSize: Type.title }
-                    Label { text: Time.clock + " · " + Time.day; color: Colors.on_surface_variant; font.pixelSize: Type.label }
-                }
-                Item { Layout.fillWidth: true }
-                ComboBox {
-                    model: Scenario.names
-                    currentIndex: Scenario.names.indexOf(Scenario.current)
-                    onActivated: (index) => Scenario.apply(Scenario.names[index])
-                }
-            }
+                    width: parent.width
+                    spacing: Spacing.gap
 
-            ColumnLayout {
-                Layout.leftMargin: Spacing.edge
-                Layout.rightMargin: Spacing.edge
-                Layout.fillWidth: true
-                spacing: Spacing.edge
-
-                // ── power ───────────────────────────────────────────────────
-                Section {
-                    title: "Power"
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: Spacing.gap
-                        visible: Power.has_battery
-                        Label {
-                            text: Power.battery + "%" + (Power.charging ? " · charging" : Power.on_battery ? " · on battery" : "")
-                            color: Power.battery <= 15 ? Colors.warning : Colors.on_surface
-                        }
-                        ProgressBar { Layout.fillWidth: true; value: Power.battery / 100 }
-                    }
+                    Label { text: "simulation"; color: Colors.primary; font.pixelSize: Type.title }
                     Label {
-                        visible: !Power.has_battery
-                        text: "no battery · desktop"
+                        text: "the dev harness that fakes the machine — not part of the shell."
                         color: Colors.on_surface_variant
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                        font.pixelSize: Type.label
                     }
-                    RowLayout {
-                        spacing: Spacing.inner
-                        Label { text: "profile"; color: Colors.on_surface_variant }
-                        ComboBox {
-                            model: Power.profiles
-                            currentIndex: Power.profiles.indexOf(Power.profile)
-                            onActivated: (index) => Power.set_profile(Power.profiles[index])
-                        }
-                    }
-                }
 
-                // ── audio ───────────────────────────────────────────────────
-                Section {
-                    title: "Audio"
+                    Label { text: "device"; color: Colors.on_surface_variant }
+                    ComboBox {
+                        Layout.fillWidth: true
+                        model: Scenario.names
+                        currentIndex: Scenario.names.indexOf(Scenario.current)
+                        onActivated: (index) => Scenario.apply(Scenario.names[index])
+                    }
+
+                    Label { text: "resolution"; color: Colors.on_surface_variant }
+                    ComboBox {
+                        Layout.fillWidth: true
+                        model: lab.resNames
+                        onActivated: (index) => { lab.screenW = lab.resDims[index][0]; lab.screenH = lab.resDims[index][1] }
+                    }
+
+                    MenuSeparator { Layout.fillWidth: true }
+
+                    Label { text: "overrides"; color: Colors.on_surface_variant }
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: Spacing.gap
-                        Label { text: "vol " + Audio.volume; color: Colors.on_surface; Layout.preferredWidth: 60 }
+                        Label { text: "vol"; color: Colors.on_surface_variant; Layout.preferredWidth: 32 }
                         Slider {
                             Layout.fillWidth: true
                             value: Audio.volume / 100
                             onMoved: Audio.set_volume(value * 100)
                         }
-                        Switch {
-                            text: "mute"
-                            checked: Audio.muted
-                            onToggled: Audio.toggle_mute()
-                        }
                     }
-                }
-
-                // ── network ─────────────────────────────────────────────────
-                Section {
-                    title: "Network"
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: Spacing.gap
-                        Switch {
-                            text: "wi-fi"
-                            checked: Network.enabled
-                            onToggled: Network.set_enabled(checked)
-                        }
-                        Label {
-                            Layout.fillWidth: true
-                            horizontalAlignment: Text.AlignRight
-                            text: !Network.enabled ? "off"
-                                : Network.connected ? (Network.ssid + " · " + Network.strength + "%")
-                                : "disconnected"
-                            color: Network.connected ? Colors.on_surface : Colors.on_surface_variant
-                        }
+                    Switch {
+                        text: "wi-fi"
+                        checked: Network.enabled
+                        onToggled: Network.set_enabled(checked)
                     }
-                }
-
-                // ── bluetooth ───────────────────────────────────────────────
-                Section {
-                    title: "Bluetooth"
                     Switch {
                         visible: Bluetooth.available
-                        text: Bluetooth.enabled ? "on" : "off"
+                        text: "bluetooth"
                         checked: Bluetooth.enabled
                         onToggled: Bluetooth.set_enabled(checked)
                     }
-                    Label {
-                        visible: !Bluetooth.available
-                        text: "no adapter · desktop"
-                        color: Colors.on_surface_variant
-                    }
-                }
 
-                // ── display ─────────────────────────────────────────────────
-                Section {
-                    title: "Display"
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: Spacing.gap
-                        visible: Display.has_brightness
-                        Label { text: "sun " + Display.brightness; color: Colors.on_surface; Layout.preferredWidth: 60 }
-                        Slider {
-                            Layout.fillWidth: true
-                            value: Display.brightness / 100
-                            onMoved: Display.set_brightness(value * 100)
-                        }
-                    }
-                    Label {
-                        visible: !Display.has_brightness
-                        text: "no brightness control · desktop"
-                        color: Colors.on_surface_variant
-                    }
-                    Switch {
-                        text: "night light"
-                        checked: Display.night_light
-                        onToggled: Display.set_night_light(checked)
-                    }
-                }
+                    Item { Layout.fillHeight: true; Layout.preferredHeight: Spacing.gap }
 
-                // ── workspaces ──────────────────────────────────────────────
-                Section {
-                    title: "Workspaces"
-                    RowLayout {
-                        spacing: Spacing.inner
-                        Repeater {
-                            model: Workspaces.list
-                            Button {
-                                required property var modelData
-                                text: modelData.id
-                                variant: modelData.id === Workspaces.focused_id ? "primary" : "outline"
-                                onClicked: Workspaces.focus(modelData.id)
-                            }
-                        }
+                    Label {
+                        text: Scenario.current + " · " + lab.screenW + "×" + lab.screenH
+                        color: Colors.on_surface_variant
+                        font.pixelSize: Type.label
                     }
                 }
             }
+        }
 
-            Item { implicitHeight: Spacing.edge }
+        // ── the actual shell, framed at the chosen resolution ───────────
+        Item {
+            id: stage
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            clip: true
+
+            readonly property real s: Math.min(1,
+                (width - 2 * Spacing.edge) / lab.screenW,
+                (height - 2 * Spacing.edge) / lab.screenH)
+
+            Rectangle {
+                id: bezel
+                anchors.centerIn: parent
+                width: lab.screenW * stage.s
+                height: lab.screenH * stage.s
+                color: Colors.surface_container_lowest
+                border.width: 1
+                border.color: Colors.outline
+
+                Item {
+                    width: lab.screenW
+                    height: lab.screenH
+                    transformOrigin: Item.TopLeft
+                    scale: stage.s
+
+                    Panels.Shell { anchors.fill: parent }
+                }
+            }
         }
     }
 }
