@@ -18,13 +18,14 @@ Popup {
     }
 
     Surface {
+        width: root.width_hint
         level: 5
         padding_x: Spacing.tight
         padding_y: Spacing.tight
 
         Base {
             id: list
-            width: root.width_hint
+            width: parent.width
             focus: true
             searchable: false
             list_appearance: "none"

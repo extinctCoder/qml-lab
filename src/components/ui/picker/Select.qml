@@ -58,13 +58,14 @@ Item {
         anchor: button
 
         Surface {
+            width: Math.max(root.width, 220)
             level: 5
             padding_x: Spacing.tight
             padding_y: Spacing.tight
 
             Base {
                 id: list
-                width: Math.max(root.width, 220) - Spacing.tight * 2
+                width: parent.width
                 focus: true
                 searchable: root.searchable
                 esc_leaves: false
