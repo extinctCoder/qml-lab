@@ -9,7 +9,7 @@ import services
 Rectangle {
     id: bar
 
-    signal quickSettings()
+    signal controlCenter()
     signal overview()
 
     implicitHeight: 34
@@ -105,7 +105,7 @@ Rectangle {
             Layout.preferredWidth: statusRow.implicitWidth + Spacing.gap * 2
             Layout.fillHeight: true
             hoverEnabled: true
-            onClicked: bar.quickSettings()
+            onClicked: bar.controlCenter()
 
             Rectangle {
                 anchors.fill: parent

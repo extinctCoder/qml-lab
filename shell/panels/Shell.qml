@@ -34,11 +34,11 @@ Item {
         }
     }
 
-    // quick-settings dismiss catcher
+    // control-center dismiss catcher
     MouseArea {
         anchors.fill: parent
-        enabled: quick.open && !activities.open
-        onClicked: quick.open = false
+        enabled: cc.open && !activities.open
+        onClicked: cc.open = false
     }
 
     // full-screen overlay (below the bar, so the bar stays visible)
@@ -53,12 +53,12 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        onQuickSettings: quick.open = !quick.open
-        onOverview: { quick.open = false; activities.open = true }
+        onControlCenter: { activities.open = false; cc.open = !cc.open }
+        onOverview: { cc.open = false; activities.open = true }
     }
 
-    QuickSettings {
-        id: quick
+    ControlCenter {
+        id: cc
         anchors.top: bar.bottom
         anchors.right: parent.right
         anchors.topMargin: Spacing.inner
