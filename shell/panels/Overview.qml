@@ -1,14 +1,13 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Effects
 import theme
 import services
 
-// Workspace overview (GNOME Activities): a blurred, dimmed desktop with a search
-// field, a strip of all workspaces up top, the current workspace shown large in
-// the centre with its neighbours peeking, and an app dash at the bottom.
+// Workspace overview (GNOME Activities): a blurred, dimmed desktop with a strip
+// of all workspaces up top and the current workspace shown large in the centre,
+// its neighbours peeking. Click a workspace to switch; Esc / click-out dismisses.
 Item {
     id: ov
 
@@ -40,21 +39,12 @@ Item {
     }
     MouseArea { anchors.fill: parent; onClicked: ov.open = false }
 
-    // ── search ──────────────────────────────────────────────────────────
-    TextField {
-        id: search
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: Spacing.gap + 34
-        width: 360
-        placeholderText: "Type to search"
-    }
-
     // ── workspace thumbnails (all, small, up top) ───────────────────────
     Row {
         id: thumbs
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: search.bottom
-        anchors.topMargin: Spacing.gap
+        anchors.top: parent.top
+        anchors.topMargin: 34 + Spacing.edge
         spacing: Spacing.inner
 
         Repeater {
@@ -81,7 +71,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: thumbs.bottom
-        anchors.bottom: dash.top
+        anchors.bottom: parent.bottom
         anchors.topMargin: Spacing.edge
         anchors.bottomMargin: Spacing.edge
         clip: true
@@ -165,63 +155,4 @@ Item {
         }
     }
 
-    // ── dash (favourite apps, bottom) ───────────────────────────────────
-    Rectangle {
-        id: dash
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: Spacing.edge
-        radius: Shape.radius
-        color: Colors.surface_container_high
-        border.width: Shape.border
-        border.color: Colors.outline_variant
-        width: dashRow.width + Spacing.gap * 2
-        height: dashRow.height + Spacing.inner * 2
-
-        Row {
-            id: dashRow
-            anchors.centerIn: parent
-            spacing: Spacing.inner
-
-            Repeater {
-                model: ["Firefox", "Files", "kitty", "nvim", "Spotify"]
-                Rectangle {
-                    id: app
-                    required property var modelData
-                    width: 40
-                    height: 40
-                    radius: Shape.radius
-                    color: Colors.surface_container_highest
-                    border.width: Shape.border
-                    border.color: Colors.outline_variant
-                    Text {
-                        anchors.centerIn: parent
-                        text: app.modelData.charAt(0)
-                        color: Colors.on_surface
-                        font.family: Type.family
-                        font.pixelSize: Type.title
-                    }
-                }
-            }
-
-            Rectangle {
-                width: 40
-                height: 40
-                radius: Shape.radius
-                color: Colors.surface_container_highest
-                border.width: Shape.border
-                border.color: Colors.outline_variant
-                Grid {
-                    anchors.centerIn: parent
-                    columns: 3
-                    rowSpacing: 3
-                    columnSpacing: 3
-                    Repeater {
-                        model: 9
-                        Rectangle { width: 3; height: 3; radius: 1; color: Colors.on_surface_variant }
-                    }
-                }
-            }
-        }
-    }
 }
