@@ -1,0 +1,9 @@
+module services
+singleton Time Time.qml
+singleton Power Power.qml
+singleton Audio Audio.qml
+singleton Network Network.qml
+singleton Bluetooth Bluetooth.qml
+singleton Display Display.qml
+singleton Workspaces Workspaces.qml
+singleton Scenario Scenario.qml

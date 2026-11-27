@@ -51,6 +51,7 @@ if __name__ == "__main__":
     view.setFlag(Qt.WindowType.WindowStaysOnTopHint, True)
     view.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)
     view.engine().addImportPath(str(ROOT / "lib"))
+    view.engine().addImportPath(str(ROOT / "shell" / "sim"))
 
     state = {"files": snapshot(), "reloads": 0}
     errors = load(view, target)
