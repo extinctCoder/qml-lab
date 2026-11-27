@@ -7,6 +7,8 @@ import components.ui.button as Button
 import components.ui.section as Section
 import components.ui.feedback as Feedback
 import components.ui.range as Range
+import components.ui.tabs as Tabs
+import components.behaviors
 
 Rectangle {
     id: gallery
@@ -27,6 +29,7 @@ Rectangle {
     property real spotify: 72
     property real discord: 20
     property real position: 84
+    property int tab: 0
 
     Flickable {
         id: scroller
@@ -342,7 +345,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "Basic · checkable: one of several, and an on/off (Space or click)"
+                text: "Basic · checkable: one of several (← → once inside), and an on/off (Space or click)"
                 size: "label"
                 muted: true
             }
@@ -350,9 +353,13 @@ Rectangle {
                 spacing: Spacing.edge
                 Row {
                     spacing: Spacing.tight
+                    Roving {
+                        id: power_group
+                    }
                     Button.Basic {
                         variant: "outline"
                         checkable: true
+                        roving: power_group
                         text: "eco"
                         checked: gallery.power === "eco"
                         onClicked: gallery.power = "eco"
@@ -360,6 +367,7 @@ Rectangle {
                     Button.Basic {
                         variant: "outline"
                         checkable: true
+                        roving: power_group
                         text: "balanced"
                         checked: gallery.power === "balanced"
                         onClicked: gallery.power = "balanced"
@@ -367,6 +375,7 @@ Rectangle {
                     Button.Basic {
                         variant: "outline"
                         checkable: true
+                        roving: power_group
                         text: "performance"
                         checked: gallery.power === "performance"
                         onClicked: gallery.power = "performance"
@@ -382,7 +391,7 @@ Rectangle {
             }
 
             Text.Mono {
-                text: "ListItem · radio (one of several) · check (on/off) · actions with meta and a second line"
+                text: "ListItem · radio (↑ ↓ select) · check (↑ ↓ move, Space toggles) · actions with meta and a second line"
                 size: "label"
                 muted: true
             }
@@ -392,21 +401,28 @@ Rectangle {
                     width: 200
                     Column {
                         width: parent.width
+                        Roving {
+                            id: output_group
+                            orientation: "column"
+                        }
                         Button.ListItem {
                             title: "speakers"
                             checkable: true
+                            roving: output_group
                             checked: gallery.output === "speakers"
                             onClicked: gallery.output = "speakers"
                         }
                         Button.ListItem {
                             title: "headphones"
                             checkable: true
+                            roving: output_group
                             checked: gallery.output === "headphones"
                             onClicked: gallery.output = "headphones"
                         }
                         Button.ListItem {
                             title: "hdmi"
                             checkable: true
+                            roving: output_group
                             enabled: false
                         }
                     }
@@ -415,9 +431,15 @@ Rectangle {
                     width: 200
                     Column {
                         width: parent.width
+                        Roving {
+                            id: switches_group
+                            orientation: "column"
+                            selects: false
+                        }
                         Button.ListItem {
                             title: "wi-fi"
                             mark: "check"
+                            roving: switches_group
                             checkable: true
                             checked: gallery.wifi
                             onClicked: gallery.wifi = !gallery.wifi
@@ -425,6 +447,7 @@ Rectangle {
                         Button.ListItem {
                             title: "bluetooth"
                             mark: "check"
+                            roving: switches_group
                             checkable: true
                             checked: gallery.bluetooth
                             onClicked: gallery.bluetooth = !gallery.bluetooth
@@ -432,6 +455,7 @@ Rectangle {
                         Button.ListItem {
                             title: "airplane"
                             mark: "check"
+                            roving: switches_group
                             checkable: true
                             enabled: false
                         }
@@ -564,9 +588,14 @@ Rectangle {
                     height: Shape.border
                     color: Colors.outline_variant
                 }
+                Roving {
+                    id: audio_group
+                    orientation: "column"
+                }
                 Button.ListItem {
                     title: "speakers"
                     meta: "built-in"
+                    roving: audio_group
                     checkable: true
                     checked: gallery.output === "speakers"
                     onClicked: gallery.output = "speakers"
@@ -574,6 +603,7 @@ Rectangle {
                 Button.ListItem {
                     title: "headphones"
                     meta: "bluetooth"
+                    roving: audio_group
                     checkable: true
                     checked: gallery.output === "headphones"
                     onClicked: gallery.output = "headphones"
@@ -868,6 +898,56 @@ Rectangle {
                 to: 231
                 buffered: 166
                 onMoved: value => gallery.position = value
+            }
+
+            Text.Mono {
+                text: "8 · Tabs"
+                size: "title"
+                tone: Colors.primary
+            }
+
+            Text.Mono {
+                text: "Basic · click a tab, or Tab into the bar and use ← → · Home · End · Tab again leaves it"
+                size: "label"
+                muted: true
+            }
+            Surface {
+                width: 420
+                padding_x: 0
+                padding_y: 0
+                Column {
+                    width: parent.width
+                    Tabs.Basic {
+                        width: parent.width
+                        tabs: ["overview", "media", "system", "weather"]
+                        current: gallery.tab
+                        onSelected: index => {
+                            gallery.tab = index;
+                            fade.restart();
+                        }
+                    }
+                    Item {
+                        width: parent.width
+                        height: 72
+                        Text.Mono {
+                            id: tab_view
+                            x: Spacing.edge
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.width - Spacing.edge * 2
+                            text: ["09:27 · thursday, november 26 · 3 notifications", "Back in Black · AC/DC · 1:24 / 3:51", "cpu 37% · memory 62% · disk 70%", "24°C · dhaka · haze"][gallery.tab]
+                            muted: true
+                        }
+                        NumberAnimation {
+                            id: fade
+                            target: tab_view
+                            property: "opacity"
+                            from: 0
+                            to: 1
+                            duration: Motion.close
+                            easing.type: Motion.ease_out
+                        }
+                    }
+                }
             }
         }
     }

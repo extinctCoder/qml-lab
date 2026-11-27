@@ -10,12 +10,23 @@ Item {
     property bool checked: false
     property var keys: checkable ? ["space"] : ["enter", "space"]
     property Item exclude: null
+    property Roving roving: null
     readonly property bool hovered: hover.hovered
     readonly property bool pressed: tap.pressed && !tap.on_excluded
 
     signal activated
 
-    activeFocusOnTab: true
+    activeFocusOnTab: roving ? roving.stop === root || activeFocus : true
+
+    Component.onCompleted: if (roving)
+        roving.join(root)
+    Component.onDestruction: if (roving)
+        roving.leave(root)
+
+    Keys.onPressed: event => {
+        if (roving && roving.handle(root, event.key))
+            event.accepted = true;
+    }
 
     Keys.onReturnPressed: if (keys.includes("enter"))
         activated()

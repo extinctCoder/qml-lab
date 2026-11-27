@@ -9,9 +9,10 @@ Surface {
     property bool checkable: false
     property bool checked: false
     property color tint: Colors.on_surface
+    property Roving roving: null
     signal clicked
 
-    selected: checkable && checked                  // Surface draws the selected look
+    selected: checkable && checked
 
     Interactive {
         parent: root
@@ -19,6 +20,7 @@ Surface {
         checkable: root.checkable
         checked: root.checked
         tint: root.tint
+        roving: root.roving
         onActivated: root.clicked()
     }
 }
