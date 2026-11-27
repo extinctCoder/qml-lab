@@ -54,7 +54,7 @@ Theme {
                 ComboBox {
                     model: Scenario.names
                     currentIndex: Scenario.names.indexOf(Scenario.current)
-                    onActivated: Scenario.apply(Scenario.names[index])
+                    onActivated: (index) => Scenario.apply(Scenario.names[index])
                 }
             }
 
@@ -88,7 +88,7 @@ Theme {
                         ComboBox {
                             model: Power.profiles
                             currentIndex: Power.profiles.indexOf(Power.profile)
-                            onActivated: Power.set_profile(Power.profiles[index])
+                            onActivated: (index) => Power.set_profile(Power.profiles[index])
                         }
                     }
                 }
