@@ -32,7 +32,7 @@ Surface {
             Mono {
                 anchors.centerIn: parent
                 text: root.icon
-                font.pixelSize: icon_box.height * (root.icon_outline ? 0.6 : 0.8)   // a little smaller inside a frame
+                font.pixelSize: icon_box.height * (root.icon_outline ? 0.6 : 0.8)
                 tone: Colors.primary
             }
         }

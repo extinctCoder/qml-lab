@@ -39,7 +39,6 @@ Base {
 
     padding_x: Spacing.gap
     padding_y: Spacing.tight
-    // the variant's resting look; Surface turns it gray when disabled, tonal when selected
     appearance: variant === "ghost" ? "ghost" : has_line ? "outlined" : "filled"
     fill: look.fill
     line: has_line ? look.line : Colors.outline_variant

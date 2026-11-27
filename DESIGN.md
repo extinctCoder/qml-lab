@@ -132,6 +132,15 @@ A 4 px grid, four steps:
    selects; in a check list, it only moves, and Space toggles.
 7. **Selection never relies on color alone**: every on/off state also changes
    shape or position (a filled radio, a filled check, a switch's thumb).
+8. **Searching keeps focus in the field.** In a list you filter by typing,
+   ↑ ↓ (or Ctrl+N/P) move a highlight while you keep typing, and Enter picks
+   the highlighted one. The highlight looks exactly like hover, and hovering
+   moves it: one current item, whichever device you use.
+9. **Popups stay with what opened them.** A select or a menu opens next to
+   its opener (above it when there's no room below). Esc closes it and gives
+   focus back to the opener; a click outside or scrolling closes it; Tab and
+   Shift+Tab close it and continue from the opener, as if it had never been
+   open.
 
 ## Components
 
@@ -139,14 +148,18 @@ The library is built bottom-up. Each family is a folder; what it offers:
 
 | Family     | Public types                            | What they are                                          |
 | ---------- | --------------------------------------- | ------------------------------------------------------ |
-| (core)     | `Surface`                               | our look for any box                                   |
+| (core)     | `Surface`, `Strip`, `Labeled`           | our look for any box; the row layout; a labeled row    |
 | `text`     | `Mono`, `Header`                        | text; an icon spanning a title and description         |
-| `mark`     | `Switch`, `Choice`, `Chevron`, `Spinner` | small drawn markers that show a state by shape        |
-| `button`   | `Basic`, `ListItem`, `Tile`             | everything you press: a button, a list row, a tile     |
+| `mark`     | `Switch`, `Choice`, `Chevron`, `Spinner`, `Eye` | small drawn markers that show a state by shape |
+| `button`   | `Basic`, `ListItem`, `Tile`, `Mark`     | everything you press: a button, a list row, a tile, a mark |
 | `section`  | `Basic`                                 | a box whose header folds its content open and closed  |
 | `feedback` | `Empty`, `Loading`, `Error`             | what's shown when there's nothing (yet) to show        |
 | `range`    | `Basic`, `Slider`, `Progress`, `Steps`, `Ring`, `Seek` | a value between a minimum and a maximum |
 | `tabs`     | `Basic`                                 | switching between views of the same place              |
+| `field`    | `Basic`, `Search`, `Password`           | typing one line of text                                |
+| `picker`   | `Palette`, `Select`, `Menu`             | finding and picking one of many options                |
+| `badge`    | `Tag`, `Count`, `Dot`                   | small labels: a word, a number, something new          |
+| `chart`    | `Spark`, `Columns`, `Lines`             | many values over time                                  |
 
 ### Surface
 
@@ -162,7 +175,9 @@ alone draws the **selected** look (tonal fill, accent border) and the
 `Basic` is the button above, in five variants; `checkable: true` makes it hold
 a value (a toggle). `ListItem` is one line in a list: an action, or a choice
 with a radio (`● ○`, one of several) or a check (`■ □`, on/off). `Tile` is a
-box in a grid: an action (`→`), or on/off with a switch.
+box in a grid: an action (`→`), or on/off with a switch. `Mark` is a small
+button that shows a drawn mark (a section's switch, a password's eye); the
+mark shows the state, so it never takes the tonal selected fill.
 
 ### Sections
 
@@ -201,6 +216,43 @@ line up like columns.
 | Ring     | the bar bent into a circle              | dashboard gauges                   |
 | Seek     | a slider in seconds (`m:ss`), with what's loaded | media position            |
 
+### Fields
+
+One line of text in a box. Focus is shown by the border itself (2 px in the
+accent) instead of a ring around it, since you type inside it; an error turns
+that border `error` and shows a short message below, and the field stays
+editable so it can be fixed. The cursor is a calm blinking block. Enter
+submits, Esc clears the text, then leaves. `Search` adds a search icon and a
+clear button `×`; `Password` hides the text, and its eye shows it.
+
+### Pickers
+
+A list of options (`{ icon, title, description, meta }`) to find one and pick
+it. Matching is fuzzy, like fzf: the typed letters must appear in order, and
+letters that start words, follow each other or start the name rank higher
+(`gst` finds **g**ho**st**ty). The matched letters show in the accent.
+
+| Kind    | Shows                                           | Where                           |
+| ------- | ----------------------------------------------- | ------------------------------- |
+| Palette | a search field with the results under it        | launcher, clipboard, emoji      |
+| Select  | a button with the current value; opens on it    | profiles, layouts, any dropdown |
+| Menu    | a popup list; typing jumps to a match           | context and tray menus          |
+
+### Badges
+
+Small labels in the same box language: 2 px corners and a 1 px border or a
+fill. A `Tag` is a short word (outlined, accent, tonal or error), a `Count` a
+number on an icon's corner (`99+` above the limit, hidden at 0), and a `Dot`
+says "something new" without a number.
+
+### Charts
+
+Many values over time, in the range colors: the track and the accent, with a
+second series in muted gray. A `Spark` is a small line with a faint filled
+area next to its value, `Columns` one block per value, and `Lines` two series
+in one plot. No axes or gridlines; the latest value is the label. The scale is
+fixed (0 to 100) or follows the highest value.
+
 ### Tabs
 
 Tabs switch between views of the same place. The active tab's word is bright,
@@ -238,8 +290,9 @@ In code, every animation uses `Glide` (numbers) or `ColorGlide` (colors) from
 
 ```
 theme/                tokens: Colors, Type, Spacing, Shape, Motion, States
-components/behaviors/ how things react: Interactive, Roving, Glide, ColorGlide
-components/ui/        Surface, and one folder per family
+components/behaviors/ how things react: Interactive, Roving, Highlight, Popup,
+                      Glide, ColorGlide, and the fuzzy matcher
+components/ui/        Surface, Strip and Labeled, and one folder per family
 gallery/              every component in its variants and states (fake data)
 ```
 
@@ -266,6 +319,15 @@ The rules every family follows:
    inside its own folder, the built-in wins.
 8. **Groups move with the arrows.** Anything with an `Interactive` can join a
    `Roving` group; the group keeps one Tab stop and handles the arrows.
+9. **Every row is a `Strip`**: a leading group, a middle that fills, and a
+   trailing group. Rows are never laid out by hand, so they all line up the
+   same way.
+10. **Drawn things draw in their `Base`.** A mark's or a chart's `Base` owns
+   the canvas and repaints it; each kind only writes `draw()`.
+11. **Size from what children want, not where they are.** A box measures its
+   children's sizes (implicit sizes), never their positions (`childrenRect`),
+   since children often position themselves relative to the box: that's a
+   binding loop.
 
 ## Naming
 
